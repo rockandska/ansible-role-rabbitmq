@@ -1,0 +1,27 @@
+---
+- name: "[RabbitMQ] Create policies"
+  rabbitmq_policy:
+    apply_to: "{{ item.apply_to | default(omit) }}"
+    name: "{{ item.name | default(omit) }}"
+    node: "{{ item.node | default(omit) }}"
+    pattern: "{{ item.pattern | default(omit) }}"
+    priority: "{{ item.priority | default(omit) }}"
+    tags: "{{ item.tags | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    state: present
+  with_items:
+    - "{{ rabbitmq_policies_to_create }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
+
+- name: "[RabbitMQ] Delete unwanted policies"
+  rabbitmq_policy:
+    name: "{{ item.name | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    state: absent
+  with_items:
+    - "{{ rabbitmq_policies_to_delete }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none

@@ -1,0 +1,95 @@
+---
+###########
+# Install #
+###########
+rabbitmq_series: 3.7
+rabbitmq_series_rpm_version:
+rabbitmq_series_deb_version:
+
+rabbitmq_rmp_repo_url: https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server
+rabbitmq_rmp_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+rabbitmq_rpm_repo_tpl: etc/yum.repos.d/rabbitmq.repo.j2
+
+rabbitmq_deb_repo_url: https://dl.bintray.com/rabbitmq/debian
+rabbitmq_deb_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+rabbitmq_deb_repo_tpl: etc/apt/sources.list.d/rabbitmq.list.j2
+rabbitmq_deb_pinning_tpl: etc/apt/preferences.d/rabbitmq.j2
+
+#################
+# Custom Config #
+#################
+rabbitmq_erlang_cookie:
+
+rabbitmq_vars_files: []
+
+rabbitmq_sysctl_tpl: etc/rabbitmq/sysctl.conf.j2
+rabbitmq_sysctl_config: {}
+
+rabbitmq_erlang_tpl: etc/rabbitmq/erlang.config.j2
+rabbitmq_erlang_config:
+
+rabbitmq_systemd_override_tpl: etc/systemd/system/rabbitmq-server.service.d/override.conf.j2
+rabbitmq_systemd_override: {}
+
+rabbitmq_custom_logrotate_tpl: etc/logrotate.d/rabbitmq-server.j2
+rabbitmq_custom_logrotate:
+
+###########
+# Cluster #
+###########
+rabbitmq_is_master:
+rabbitmq_slave_of:
+
+###########
+# Plugins #
+###########
+rabbitmq_plugins_to_enable: []
+
+#########
+# Users #
+#########
+rabbitmq_users_to_create: []
+rabbitmq_users_to_delete: []
+
+############
+# Api user #
+############
+rabbitmq_management_user:
+rabbitmq_management_password:
+rabbitmq_management_host:
+rabbitmq_management_port:
+
+##########
+# Vhosts #
+##########
+rabbitmq_vhosts_to_create: []
+rabbitmq_vhosts_to_delete: []
+
+##########
+# Queues #
+##########
+rabbitmq_queues_to_create: []
+rabbitmq_queues_to_delete: []
+
+############
+# Exchange #
+############
+rabbitmq_exchanges_to_create: []
+rabbitmq_exchanges_to_delete: []
+
+############
+# Bindings #
+############
+rabbitmq_bindings_to_create: []
+rabbitmq_bindings_to_delete: []
+
+############
+# Policies #
+############
+rabbitmq_policies_to_create: []
+rabbitmq_policies_to_delete: []
+
+#########
+# Debug #
+#########
+rabbitmq_hide_log: true

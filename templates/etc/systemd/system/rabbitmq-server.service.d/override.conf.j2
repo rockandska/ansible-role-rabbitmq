@@ -1,0 +1,6 @@
+{% for section in rabbitmq_systemd_override %}
+[{{ section }}]
+{% for key,value in rabbitmq_systemd_override[section].items() %}
+{{ key }}={{ value }}
+{% endfor %}
+{% endfor %}

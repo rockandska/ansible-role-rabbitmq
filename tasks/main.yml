@@ -1,0 +1,41 @@
+---
+
+- name: "Include user var files"
+  include_vars:
+    file: "{{ item }}"
+  with_items:
+    - "{{ rabbitmq_vars_files }}"
+  when:
+    - rabbitmq_vars_files | length > 0
+
+- import_tasks: pre_checks.yml
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - "config_{{ ansible_os_family }}.yml"
+
+- import_tasks: config_logrotate.yml
+
+- import_tasks: config_systemd.yml
+
+- import_tasks: config_plugins.yml
+
+- import_tasks: config_server.yml
+
+- meta: flush_handlers
+
+- name: "[RabbitMQ] Ensure rabbitmq is started and enabled"
+  service:
+    name: "rabbitmq-server"
+    state: "started"
+    enabled: "true"
+
+- import_tasks: config_vhosts.yml
+
+- import_tasks: config_users.yml
+
+- import_tasks: config_queues.yml
+
+- import_tasks: config_exchanges.yml
+
+- import_tasks: config_bindings.yml

@@ -1,0 +1,64 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+
+    - name: "Make sure we have a 'wheel/sudo' group"
+      group:
+        name: "{{ (ansible_os_family == 'Debian') | ternary('sudo','wheel') }}"
+        state: present
+
+    - name: "Allow 'wheel/sudo' group to have passwordless sudo"
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: "^%{{ (ansible_os_family == 'Debian') | ternary('sudo','wheel') }}"
+        line: "%{{ (ansible_os_family == 'Debian') | ternary('sudo','wheel') }} ALL=(ALL) NOPASSWD: ALL"
+        validate: 'visudo -cf %s'
+
+    - name: "Add sudoers users to 'sudo/wheel' group"
+      user:
+        name: molecule
+        groups: "{{ (ansible_os_family == 'Debian') | ternary('sudo','wheel') }}"
+        append: true
+        state: present
+        createhome: true
+
+    - name: "[debian] Install prerequisites"
+      apt:
+        package:
+          - apt-transport-https
+          - gpg-agent
+          - ca-certificates
+          - logrotate
+          - socat
+          - python-pip
+        state: present
+      when:
+        - ansible_os_family == 'Debian'
+
+    - name: "[redhat/centos] Install EPEL repository"
+      yum:
+        name:
+          - epel-release
+        state: present
+      when:
+        - ansible_os_family == 'RedHat'
+
+    - name: "[redhat/centos] Install prerequisites"
+      yum:
+        name:
+          - logrotate
+          - socat
+          - python-pip
+        state: present
+      when:
+        - ansible_os_family == 'RedHat'
+
+    - name: "Install pip dependencies"
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - requests

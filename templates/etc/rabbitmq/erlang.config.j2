@@ -1,0 +1,4 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "false"
+{% for line in rabbitmq_erlang_config.split('\n') %}
+{{ line }}
+{% endfor %}

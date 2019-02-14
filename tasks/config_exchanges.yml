@@ -1,0 +1,37 @@
+---
+- name: "[RabbitMQ] Create exchanges"
+  rabbitmq_exchange:
+    login_host: "{{ rabbitmq_management_host | default(omit,true) }}"
+    login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
+    login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
+    login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    arguments: "{{ item.arguments | default(omit) }}"
+    auto_delete: "{{ item.auto_delete | default(omit) }}"
+    durable: "{{ item.durable | default(omit) }}"
+    exchange_type: "{{ item.exchange_type | default(omit) }}"
+    internal: "{{ item.internal | default(omit) }}"
+    name: "{{ item.name | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    state: present
+  no_log: "{{ rabbitmq_hide_log }}"
+  with_items:
+    - "{{ rabbitmq_exchanges_to_create }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
+
+- name: "[RabbitMQ] Delete unwanted exchanges"
+  rabbitmq_exchange:
+    login_host: "{{ rabbitmq_management_host | default(omit,true) }}"
+    login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
+    login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
+    login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    name: "{{ item.name | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    state: absent
+  no_log: "{{ rabbitmq_hide_log }}"
+  with_items:
+    - "{{ rabbitmq_exchanges_to_delete }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none

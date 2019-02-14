@@ -1,0 +1,13 @@
+---
+- name: "[RabbitMQ] Copy custom logrotate config if exists"
+  template:
+    src: "{{ rabbitmq_custom_logrotate_tpl }}"
+    dest: "/etc/logrotate.d/rabbitmq-server"
+    force: true
+    backup: true
+    mode: 0644
+    owner: root
+    validate: logrotate --force %s
+  when:
+    - rabbitmq_custom_logrotate | d("") | trim | length > 0
+    - rabbitmq_custom_logrotate != None

@@ -1,0 +1,38 @@
+---
+- name: "[RabbitMQ] Create bindings"
+  rabbitmq_binding:
+    arguments: "{{ item.arguments | default(omit) }}"
+    destination: "{{ item.destination | default(omit) }}"
+    destination_type: "{{ item.destination_type | default(omit) }}"
+    name: "{{ item.name | default(omit) }}"
+    routing_key: "{{ item.routing_key | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    login_host: "{{ rabbitmq_management_host | default(omit,true) }}"
+    login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
+    login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
+    login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    state: present
+  no_log: "{{ rabbitmq_hide_log }}"
+  with_items:
+    - "{{ rabbitmq_bindings_to_create }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
+
+- name: "[RabbitMQ] Delete unwanted bindings"
+  rabbitmq_binding:
+    destination: "{{ item.destination | default(omit) }}"
+    destination_type: "{{ item.destination_type | default(omit) }}"
+    name: "{{ item.name | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    login_host: "{{ rabbitmq_management_host | default(omit,true) }}"
+    login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
+    login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
+    login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    state: absent
+  no_log: "{{ rabbitmq_hide_log }}"
+  with_items:
+    - "{{ rabbitmq_bindings_to_delete }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none

@@ -1,0 +1,124 @@
+---
+
+- name: "Test variables type: string"
+  assert:
+    that:
+      - vars[item] is defined
+      - vars[item] is none
+        or vars[item] is string
+  with_items:
+    - rabbitmq_rmp_repo_url
+    - rabbitmq_rmp_gpg_url
+    - rabbitmq_rpm_repo_tpl
+    - rabbitmq_deb_repo_url
+    - rabbitmq_deb_gpg_url
+    - rabbitmq_deb_repo_tpl
+    - rabbitmq_deb_pinning_tpl
+    - rabbitmq_erlang_config
+    - rabbitmq_sysctl_tpl
+    - rabbitmq_erlang_tpl
+    - rabbitmq_systemd_override_tpl
+    - rabbitmq_custom_logrotate_tpl
+    - rabbitmq_custom_logrotate
+    - rabbitmq_slave_of
+    - rabbitmq_management_user
+    - rabbitmq_management_password
+    - rabbitmq_management_host
+
+- name: "Test variables type: number"
+  assert:
+    that:
+      - vars[item] is defined
+      - vars[item] is none
+        or vars[item] is number
+  with_items:
+    - rabbitmq_series
+    - rabbitmq_series_rpm_version
+    - rabbitmq_series_deb_version
+    - rabbitmq_management_port
+
+- name: "Test variables type: list"
+  assert:
+    that:
+      - vars[item] is defined
+      - vars[item] is iterable
+  with_items:
+    - rabbitmq_vars_files
+    - rabbitmq_vhosts_to_delete
+    - rabbitmq_vhosts_to_create
+    - rabbitmq_users_to_delete
+    - rabbitmq_users_to_create
+    - rabbitmq_plugins_to_enable
+    - rabbitmq_queues_to_delete
+    - rabbitmq_queues_to_create
+    - rabbitmq_bindings_to_delete
+    - rabbitmq_bindings_to_create
+    - rabbitmq_exchanges_to_delete
+    - rabbitmq_exchanges_to_create
+    - rabbitmq_policies_to_delete
+    - rabbitmq_policies_to_create
+
+- name: "Test variables type: dict"
+  assert:
+    that:
+      - vars[item] is defined
+      - vars[item] is mapping
+  with_items:
+    - rabbitmq_sysctl_config
+    - rabbitmq_systemd_override
+
+- name: "Test variables type: boolean"
+  assert:
+    that:
+      - vars[item] is defined
+      - vars[item] is not string
+  with_items:
+    - rabbitmq_is_master
+
+- name: "Test that there is as least one vhost to create if there is some to delete"
+  assert:
+    that:
+      - rabbitmq_vhosts_to_create | length > 0
+  when:
+    - rabbitmq_vhosts_to_delete | length > 0
+
+- name: "Test that the vhosts to delete are not part of those to create"
+  assert:
+    that:
+      - rabbitmq_vhosts_to_create | intersect(rabbitmq_vhosts_to_delete) | list | length == 0
+  when:
+    - rabbitmq_vhosts_to_delete | length > 0
+
+- name: "Test that there is as least one user to create if there is some to delete"
+  assert:
+    that:
+      - rabbitmq_users_to_create | length > 0
+  when:
+    - rabbitmq_users_to_delete | length > 0
+
+- name: "Test that the users to delete are not part of those to create"
+  assert:
+    that:
+      - (rabbitmq_users_to_create | map(attribute='user') | list) | intersect(rabbitmq_users_to_delete) | list | length == 0
+  when:
+    - rabbitmq_users_to_delete | length > 0
+
+- name: "Test that management credentials are defined if asked to delete 'guest' user"
+  assert:
+    that:
+      - vars[item] is defined
+      - vars[item] is not none
+      - vars[item] | length > 0
+  with_items:
+    - rabbitmq_management_user
+    - rabbitmq_management_password
+  when:
+    - (rabbitmq_bindings_to_delete | length > 0)
+      or (rabbitmq_bindings_to_create | length > 0)
+      or (rabbitmq_exchanges_to_delete | length > 0)
+      or (rabbitmq_exchanges_to_create | length > 0)
+      or (rabbitmq_policies_to_delete | length > 0)
+      or (rabbitmq_policies_to_create | length > 0)
+      or (rabbitmq_queues_to_delete | length > 0)
+      or (rabbitmq_queues_to_create | length > 0)
+    - rabbitmq_users_to_delete | select('match', '^guest$') | list | length > 0

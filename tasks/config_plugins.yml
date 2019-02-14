@@ -1,0 +1,32 @@
+---
+- name: "[RabbitMQ] Add 'rabbitmq_management' plugin to the plugins list if user config require it"
+  set_fact:
+    rabbitmq_plugins_to_enable: "{{ rabbitmq_plugins_to_enable + ['rabbitmq_management'] }}"
+  when:
+    - (rabbitmq_bindings_to_delete | length > 0)
+      or (rabbitmq_bindings_to_create | length > 0)
+      or (rabbitmq_exchanges_to_delete | length > 0)
+      or (rabbitmq_exchanges_to_create | length > 0)
+      or (rabbitmq_policies_to_delete | length > 0)
+      or (rabbitmq_policies_to_create | length > 0)
+      or (rabbitmq_queues_to_delete | length > 0)
+      or (rabbitmq_queues_to_create | length > 0)
+
+- name: "[RabbitMQ] Disable plugins"
+  rabbitmq_plugin:
+    names: "{{ rabbitmq_plugins_to_disable | unique | list | join(',') }}"
+    state: disabled
+  notify: restart rabbitmq
+  when:
+    - rabbitmq_plugins_to_disable is defined
+    - rabbitmq_plugins_to_disable | length > 0
+
+- name: "[RabbitMQ] Enable plugins"
+  rabbitmq_plugin:
+    names: "{{ rabbitmq_plugins_to_enable | unique | list | join(',') }}"
+    state: enabled
+    new_only: true
+  notify: restart rabbitmq
+  when:
+    - rabbitmq_plugins_to_enable is defined
+    - rabbitmq_plugins_to_enable | length > 0

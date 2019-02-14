@@ -1,0 +1,41 @@
+---
+- name: "[RabbitMQ] Create queues"
+  rabbitmq_queue:
+    arguments: "{{ item.arguments | default(omit) }}"
+    auto_delete: "{{ item.auto_delete | default(omit) }}"
+    auto_expires: "{{ item.auto_expires | default(omit) }}"
+    dead_letter_exchange: "{{ item.dead_letter_exchange | default(omit) }}"
+    dead_letter_routing_key: "{{ item.dead_letter_routing_key | default(omit) }}"
+    durable: "{{ item.durable | default(omit) }}"
+    login_host: "{{ rabbitmq_management_host | default(omit,true) }}"
+    login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
+    login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
+    login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    max_length: "{{ item.max_length | default(omit) }}"
+    max_priority: "{{ item.max_priority | default(omit) }}"
+    message_ttl: "{{ item.message_ttl | default(omit) }}"
+    name: "{{ item.name | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    state: present
+  no_log: "{{ rabbitmq_hide_log }}"
+  with_items:
+    - "{{ rabbitmq_queues_to_create }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
+
+- name: "[RabbitMQ] Delete unwanted queues"
+  rabbitmq_queue:
+    login_host: "{{ rabbitmq_management_host | default(omit,true) }}"
+    login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
+    login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
+    login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    name: "{{ item.name | default(omit) }}"
+    vhost: "{{ item.vhost | default(omit) }}"
+    state: absent
+  no_log: "{{ rabbitmq_hide_log }}"
+  with_items:
+    - "{{ rabbitmq_queues_to_delete }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none

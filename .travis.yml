@@ -1,0 +1,50 @@
+---
+sudo: required
+language: python
+cache: pip
+services:
+  - docker
+matrix:
+  fast_finish: true
+
+stages:
+  - name: tests
+  - name: mkrelease
+    if: |
+      branch = master \
+      AND type != pull_request
+
+jobs:
+  include:
+
+    - &test-tox
+      stage: tests
+      install:
+        - pip install tox-travis
+      script: tox
+      env:
+        - ANSIBLE=2.5
+
+    - <<: *test-tox
+      env:
+        - ANSIBLE=2.6
+
+    - <<: *test-tox
+      env:
+        - ANSIBLE=2.7
+
+    - stage: mkrelease
+      install:
+        - pip install git-semver ansible
+        - wget --quiet -O /tmp/mkrelease.sh https://raw.githubusercontent.com/rockandska/scripts/${MKRELEASE_REF:-master}/CI/mkrelease.sh
+        - chmod +x /tmp/mkrelease.sh
+        - wget --quiet -O /tmp/pubrelease.sh https://raw.githubusercontent.com/rockandska/scripts/${PUBRELEASE_REF:-master}/CI/pubrelease.sh
+        - chmod +x /tmp/pubrelease.sh
+      script:
+        - export TRAVIS_TAG=$(/tmp/mkrelease.sh)
+      deploy:
+        provider: script
+        script: /tmp/pubrelease.sh ansible-galaxy
+        skip_cleanup: true
+        on:
+          tags: true

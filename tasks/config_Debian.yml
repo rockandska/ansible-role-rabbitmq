@@ -1,0 +1,35 @@
+---
+- name: "[RabbitMQ] Import RabbitMQ GPG signing key [Debian/Ubuntu]"
+  apt_key:
+    url: "{{ rabbitmq_deb_gpg_url }}"
+    state: present
+    validate_certs: false
+  register: _add_apt_key
+  until: _add_apt_key is succeeded
+  retries: 5
+  delay: 2
+
+- name: "[RabbitMQ] Add RabbitMQ repository [Debian/Ubuntu]"
+  template:
+    src: "{{ rabbitmq_deb_repo_tpl }}"
+    dest: "/etc/apt/sources.list.d/{{ rabbitmq_deb_repo_tpl | basename | regex_replace('\\.j2$', '') }}"
+    force: true
+    backup: true
+
+- name: "[RabbitMQ] Add RabbitMQ repository pinning preferences [Debian/Ubuntu]"
+  template:
+    src: "{{ rabbitmq_deb_pinning_tpl }}"
+    dest: "/etc/apt/preferences.d/{{ rabbitmq_deb_pinning_tpl | basename | regex_replace('\\.j2$', '') }}"
+    force: true
+    backup: true
+
+- name: "[RabbitMQ] Update cache"
+  apt:
+    update_cache: true
+  changed_when: false
+
+- name: "[RabbitMQ] Install RabbitMQ [Debian/Ubuntu]"
+  apt:
+    package:
+      - "rabbitmq-server{{ rabbitmq_series_deb_version | ternary ('=' + (rabbitmq_series_deb_version | string),'') }}"
+    state: present

@@ -1,0 +1,14 @@
+---
+- name: "[RabbitMQ] Add RabbitMQ repository file [RHEL/CentOS]"
+  template:
+    src: "{{ rabbitmq_rpm_repo_tpl }}"
+    dest: "/etc/yum.repos.d/{{ rabbitmq_rpm_repo_tpl | basename | regex_replace('\\.j2$', '') }}"
+    force: true
+    backup: true
+
+- name: "[RabbitMQ] Install RabbitMQ [RHEL/CentOS]"
+  yum:
+    name: "rabbitmq-server{{ rabbitmq_series_rpm_version | ternary ('-' + (rabbitmq_series_rpm_version | string),'') }}"
+    state: present
+    disablerepo: "*"
+    enablerepo: "rabbitmq"

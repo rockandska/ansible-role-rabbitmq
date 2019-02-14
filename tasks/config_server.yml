@@ -1,0 +1,47 @@
+---
+
+- name: "[RabbitMQ] Copy custom server config (sysctl format)"
+  template:
+    src: "{{ rabbitmq_sysctl_tpl }}"
+    dest: "/etc/rabbitmq/rabbitmq.conf"
+    force: true
+    mode: 0644
+    owner: root
+  notify:
+    - restart rabbitmq
+  when:
+    - rabbitmq_sysctl_config | length > 0
+    - rabbitmq_series is version('3.7', '>=')
+
+- name: "[RabbitMQ] Remove custom systctl config file if rabbitmq_sysctl_config is empty"
+  file:
+    path: "/etc/rabbitmq/rabbitmq.conf"
+    state: absent
+  notify:
+    - restart rabbitmq
+  when:
+    - rabbitmq_sysctl_config | length == 0
+    - rabbitmq_series is version('3.7', '>=')
+
+- name: "[RabbitMQ] Copy custom server config (erlang format)"
+  template:
+    src: "{{ rabbitmq_erlang_tpl }}"
+    dest: "/etc/rabbitmq/{{ ( rabbitmq_series is version('3.7', '>=') ) | ternary('advanced.config','rabbitmq.config') }}"
+    force: true
+    mode: 0644
+    owner: root
+  notify:
+    - restart rabbitmq
+  when:
+    - rabbitmq_erlang_config | d("") | trim | length > 0
+    - rabbitmq_erlang_config != None
+
+- name: "[RabbitMQ] Remove custom erlang config file if rabbitmq_erlang_config is empty"
+  file:
+    path: "/etc/rabbitmq/{{ ( rabbitmq_series is version('3.7', '>=') ) | ternary('advanced.config','rabbitmq.config') }}"
+    state: absent
+  notify:
+    - restart rabbitmq
+  when:
+    - rabbitmq_erlang_config | d("") | trim | length == 0
+      or rabbitmq_erlang_config == None

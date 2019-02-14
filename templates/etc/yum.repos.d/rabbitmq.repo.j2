@@ -1,0 +1,7 @@
+[rabbitmq]
+name=rabbitmq
+baseurl={{ rabbitmq_rmp_repo_url }}/v{{ rabbitmq_series }}.x/el/{{ ansible_distribution_major_version }}
+repo_gpgcheck=0
+gpgcheck=1
+enabled=1
+gpgkey={{ rabbitmq_rmp_gpg_url }}

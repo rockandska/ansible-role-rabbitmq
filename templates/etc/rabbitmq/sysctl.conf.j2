@@ -1,0 +1,20 @@
+#jinja2: trim_blocks: "true", lstrip_blocks: "false"
+{%- macro treedot(dict,string) -%}
+  {%- for key, value in dict.items() -%}
+    {%- if value is mapping -%}
+      {%- if string -%}
+        {%- set str = string ~ '.' ~ key  -%}
+      {%- else -%}
+        {%- set str = key  -%}
+      {%- endif -%}
+      {{ treedot(value,str) }}
+    {%- else -%}
+      {% if string %}
+{{ string ~ '.' ~ key }} = {{ value | string }}
+      {% else %}
+{{ key }} = {{ value | string }}
+      {% endif %}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endmacro -%}
+{{ treedot(rabbitmq_sysctl_config,none) }}

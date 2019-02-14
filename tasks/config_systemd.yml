@@ -1,0 +1,39 @@
+---
+
+- name: "[RabbitMQ] Ensure that rabbitmq override systemd directory exists"
+  file:
+    path: /etc/systemd/system/rabbitmq-server.service.d
+    state: directory
+    mode: 0755
+    owner: root
+  when:
+    - rabbitmq_systemd_override | length > 0
+
+- name: "[RabbitMQ] Remove override systemd config file if rabbitmq_systemd_override is empty"
+  file:
+    path: /etc/systemd/system/rabbitmq-server.service.d/override.conf
+    state: absent
+  notify:
+    - restart rabbitmq
+  when:
+    - rabbitmq_systemd_override | length == 0
+
+- name: "[RabbitMQ] Copy override systemd file config if exists"
+  template:
+    src: "{{ rabbitmq_systemd_override_tpl }}"
+    dest: "/etc/systemd/system/rabbitmq-server.service.d/override.conf"
+    force: true
+    mode: 0644
+    owner: root
+  notify:
+    - restart rabbitmq
+  when:
+    - rabbitmq_systemd_override | length > 0
+
+- name: "[RabbitMQ] Check that the override systemd file doesn't break the service"
+  shell: systemd-analyze verify rabbitmq-server.service
+  changed_when: false
+  when:
+    - rabbitmq_systemd_override | length > 0
+  tags:
+    - skip_ansible_lint
