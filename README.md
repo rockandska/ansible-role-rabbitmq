@@ -47,8 +47,6 @@ rabbitmq_deb_pinning_tpl: etc/apt/preferences.d/rabbitmq.j2
 #################
 # Custom Config #
 #################
-rabbitmq_erlang_cookie:
-
 rabbitmq_vars_files: []
 
 rabbitmq_sysctl_tpl: etc/rabbitmq/sysctl.conf.j2
