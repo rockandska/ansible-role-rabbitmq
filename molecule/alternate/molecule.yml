@@ -52,4 +52,4 @@ provisioner:
     converge: playbook.yml
     destroy: destroy.yml
 scenario:
-  name: default
+  name: alternate
