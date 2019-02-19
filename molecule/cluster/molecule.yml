@@ -23,6 +23,12 @@ platforms:
       - SYS_ADMIN
     networks:
       - name: ansible-role-rabbitmq-cluster
+    exposed_ports:
+      - 4369/tcp
+      - 5671/tcp
+      - 5672/tcp
+      - 15672/tcp
+      - 25672/tcp
   - name: ansible-role-rabbitmq-debian-stretch
     image: debian:stretch
     command: "/lib/systemd/systemd"
@@ -36,6 +42,12 @@ platforms:
       - SYS_ADMIN
     networks:
       - name: ansible-role-rabbitmq-cluster
+    exposed_ports:
+      - 4369/tcp
+      - 5671/tcp
+      - 5672/tcp
+      - 15672/tcp
+      - 25672/tcp
   - name: ansible-role-rabbitmq-centos-7
     image: centos:7
     command: "/usr/sbin/init"
@@ -49,6 +61,12 @@ platforms:
       - SYS_ADMIN
     networks:
       - name: ansible-role-rabbitmq-cluster
+    exposed_ports:
+      - 4369/tcp
+      - 5671/tcp
+      - 5672/tcp
+      - 15672/tcp
+      - 25672/tcp
 provisioner:
   name: ansible
   inventory:

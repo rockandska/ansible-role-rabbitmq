@@ -24,6 +24,7 @@
     - rabbitmq_management_user
     - rabbitmq_management_password
     - rabbitmq_management_host
+    - rabbitmq_cluster_node_type
 
 - name: "Test variables type: number"
   assert:
@@ -74,6 +75,7 @@
       - vars[item] is not string
   with_items:
     - rabbitmq_is_master
+    - rabbitmq_peer_discovery_classic
 
 - name: "Test that there is as least one vhost to create if there is some to delete"
   assert:

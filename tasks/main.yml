@@ -22,6 +22,8 @@
 
 - import_tasks: config_server.yml
 
+- import_tasks: config_cookie.yml
+
 - meta: flush_handlers
 
 - name: "[RabbitMQ] Ensure rabbitmq is started and enabled"

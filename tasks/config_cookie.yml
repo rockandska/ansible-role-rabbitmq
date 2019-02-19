@@ -1,0 +1,49 @@
+---
+- name: "[RabbitMQ] Check if the cookie file exist on master nodes"
+  stat:
+    path: "/var/lib/rabbitmq/.erlang.cookie"
+  register: stat_rabbitmq_cookie
+  changed_when: false
+  when:
+    - rabbitmq_is_master
+
+- name: "[RabbitMQ] Generate erlang cookie for master nodes if needed"
+  shell: |
+    tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32 | base64
+  register: tmp_rabbitmq_cookie
+  changed_when: false
+  when:
+    - rabbitmq_is_master
+    - not stat_rabbitmq_cookie.stat.exists
+
+- name: "[RabbitMQ] Copy erlang cookie to master nodes if needed"
+  copy:
+    content: "{{ tmp_rabbitmq_cookie.stdout }}"
+    dest: /var/lib/rabbitmq/.erlang.cookie
+    mode: 0400
+    owner: rabbitmq
+    group: rabbitmq
+  notify: restart rabbitmq
+  when:
+    - rabbitmq_is_master
+    - not stat_rabbitmq_cookie.stat.exists
+
+- name: "[RabbitMQ] Get cookie from master nodes"
+  slurp:
+    src: /var/lib/rabbitmq/.erlang.cookie
+  register: rabbitmq_cookie
+  changed_when: false
+  when:
+    - rabbitmq_is_master
+
+- name: "[RabbitMQ] Update cookie on slaves"
+  copy:
+    content: "{{ hostvars[ rabbitmq_slave_of ].rabbitmq_cookie.content | b64decode }}"
+    dest: /var/lib/rabbitmq/.erlang.cookie
+    mode: 0400
+    owner: rabbitmq
+    group: rabbitmq
+  register: rabbitmq_update_cookie
+  notify: restart rabbitmq
+  when:
+    - rabbitmq_slave_of is not none

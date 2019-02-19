@@ -236,15 +236,14 @@ rabbitmq_hide_log: true
   - a multiline string with the rabbitmq config in erlang format to apply
   - will be used as rabbitmq.config for version <=3.6
   - will be used as advanced.conf for version >=3.7
+  - **don't enclose the configuration with *[* and *].* , it is done inside the template **
   - example:
   ```yaml
   rabbitmq_erlang_config: |
-    [
     {rabbit, [
         {tcp_listeners, [{"127.0.0.1", 5672}]}
       ]
     }
-    ].
   ```
 
 - `rabbitmq_systemd_override_tpl`
@@ -320,11 +319,24 @@ rabbitmq_hide_log: true
 
   - not mandatory in standalone install
 
+  - **need to be a hostname/IP who exist in the inventory and should be the hostname resolvable by the hosts themselves**
+
   - Example:
 
     ```yaml
-    rabbitmq_slave_of: rabbitmq-master.internal:5672
+    rabbitmq_slave_of: rabbitmq-master.internal
     ```
+
+- `rabbitmq_peer_discovery_classic`
+
+  - default: true
+  - whether if cluster the nodes should be using classical discovery or not if you want to use another discovery type
+  - the cluster configuration will be automatically generated and add to config file based on inventory name if using classic discovery
+
+- `rabbitmq_cluster_node_type`
+
+  - default: disc
+  - whether the node is of type `disc` or `ram`
 
 - `rabbitmq_users_to_create`
 
@@ -380,11 +392,21 @@ rabbitmq_hide_log: true
 - `rabbitmq_management_host`
 
   - default: localhost
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
   - **Don't forget to configure rabbitmq_management to only allow connection from localhost**
 
 - `rabbitmq_management_port`
 
   - default: 15672
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
   - **Don't forget to configure rabbitmq_management to only allow connection from localhost**
 
 - `rabbitmq_plugins_to_enable`
@@ -445,6 +467,7 @@ rabbitmq_hide_log: true
       - name: queue_test
         vhost: vhost_test
     ```
+
 - `rabbitmq_queues_to_delete`
   - list of queues to delete
 
@@ -457,6 +480,7 @@ rabbitmq_hide_log: true
       - name: queue_test
         vhost: vhost_test
     ```
+
 - `rabbitmq_exchanges_to_create`
 
   - list of exchanges to create
@@ -468,6 +492,7 @@ rabbitmq_hide_log: true
       - name: exchange_test
         vhost: vhost_test
     ```
+
 - `rabbitmq_exchanges_to_delete`
 
   - list of exchanges to delete
