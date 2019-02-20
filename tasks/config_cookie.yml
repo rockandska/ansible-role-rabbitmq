@@ -9,7 +9,7 @@
 
 - name: "[RabbitMQ] Generate erlang cookie for master nodes if needed"
   shell: |
-    tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32 | base64
+    set -o pipefail; tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32 | base64
   register: tmp_rabbitmq_cookie
   changed_when: false
   when:

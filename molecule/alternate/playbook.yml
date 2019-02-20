@@ -10,9 +10,8 @@
     rabbitmq_sysctl_config:
       listeners:
         tcp:
-          default: 5673
+          default: 5672
     rabbitmq_erlang_config: |
-      [
         {rabbit,
           [
             {default_vhost,       <<"to_delete">>},
@@ -22,7 +21,6 @@
             {default_user_tags, [administrator]}
           ]
         }
-      ].
     rabbitmq_systemd_override:
       Service:
         LimitNOFILE: 50000

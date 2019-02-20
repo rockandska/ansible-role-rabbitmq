@@ -146,6 +146,7 @@ rabbitmq_hide_log: true
     - keep the repository name as `rabbitmq`
 
 - `rabbitmq_series_rpm_version`
+
   - install a specific version of the `rabbitmq_series` for the Centos / Redhat systems
   - example:
     ```
@@ -304,6 +305,8 @@ rabbitmq_hide_log: true
   - tag the host as a master
 
   - not mandatory in standalone install
+
+  - only use to know on which node the api calls and commands will be done and where to get the cookie to propagate.
 
   - Example:
 

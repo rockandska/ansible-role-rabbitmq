@@ -1,6 +1,6 @@
 ---
 
-- name: "Include user var files"
+- name: "[RabbitMQ] Include user var files"
   include_vars:
     file: "{{ item }}"
   with_items:

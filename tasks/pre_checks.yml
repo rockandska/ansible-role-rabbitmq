@@ -1,6 +1,6 @@
 ---
 
-- name: "Test variables type: string"
+- name: "[RabbitMQ] Test variables type: string"
   assert:
     that:
       - vars[item] is defined
@@ -25,8 +25,10 @@
     - rabbitmq_management_password
     - rabbitmq_management_host
     - rabbitmq_cluster_node_type
+    - rabbitmq_series_rpm_version
+    - rabbitmq_series_deb_version
 
-- name: "Test variables type: number"
+- name: "[RabbitMQ] Test variables type: number"
   assert:
     that:
       - vars[item] is defined
@@ -34,11 +36,9 @@
         or vars[item] is number
   with_items:
     - rabbitmq_series
-    - rabbitmq_series_rpm_version
-    - rabbitmq_series_deb_version
     - rabbitmq_management_port
 
-- name: "Test variables type: list"
+- name: "[RabbitMQ] Test variables type: list"
   assert:
     that:
       - vars[item] is defined
@@ -59,7 +59,7 @@
     - rabbitmq_policies_to_delete
     - rabbitmq_policies_to_create
 
-- name: "Test variables type: dict"
+- name: "[RabbitMQ] Test variables type: dict"
   assert:
     that:
       - vars[item] is defined
@@ -68,7 +68,7 @@
     - rabbitmq_sysctl_config
     - rabbitmq_systemd_override
 
-- name: "Test variables type: boolean"
+- name: "[RabbitMQ] Test variables type: boolean"
   assert:
     that:
       - vars[item] is defined
@@ -77,35 +77,35 @@
     - rabbitmq_is_master
     - rabbitmq_peer_discovery_classic
 
-- name: "Test that there is as least one vhost to create if there is some to delete"
+- name: "[RabbitMQ] Test that there is as least one vhost to create if there is some to delete"
   assert:
     that:
       - rabbitmq_vhosts_to_create | length > 0
   when:
     - rabbitmq_vhosts_to_delete | length > 0
 
-- name: "Test that the vhosts to delete are not part of those to create"
+- name: "[RabbitMQ] Test that the vhosts to delete are not part of those to create"
   assert:
     that:
       - rabbitmq_vhosts_to_create | intersect(rabbitmq_vhosts_to_delete) | list | length == 0
   when:
     - rabbitmq_vhosts_to_delete | length > 0
 
-- name: "Test that there is as least one user to create if there is some to delete"
+- name: "[RabbitMQ] Test that there is as least one user to create if there is some to delete"
   assert:
     that:
       - rabbitmq_users_to_create | length > 0
   when:
     - rabbitmq_users_to_delete | length > 0
 
-- name: "Test that the users to delete are not part of those to create"
+- name: "[RabbitMQ] Test that the users to delete are not part of those to create"
   assert:
     that:
       - (rabbitmq_users_to_create | map(attribute='user') | list) | intersect(rabbitmq_users_to_delete) | list | length == 0
   when:
     - rabbitmq_users_to_delete | length > 0
 
-- name: "Test that management credentials are defined if asked to delete 'guest' user"
+- name: "[RabbitMQ] Test that management credentials are defined if asked to delete 'guest' user"
   assert:
     that:
       - vars[item] is defined
