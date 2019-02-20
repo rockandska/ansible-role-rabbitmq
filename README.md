@@ -66,6 +66,8 @@ rabbitmq_custom_logrotate:
 ###########
 rabbitmq_is_master:
 rabbitmq_slave_of:
+rabbitmq_peer_discovery_classic: true
+rabbitmq_cluster_node_type: disc
 
 ###########
 # Plugins #
@@ -123,7 +125,7 @@ rabbitmq_policies_to_delete: []
 rabbitmq_hide_log: true
 ```
 
-#### Details:
+#### Details
 
 - `rabbitmq_series`
 
@@ -426,12 +428,12 @@ rabbitmq_hide_log: true
 
 - `rabbitmq_plugins_to_disable`
 
-  - list of plugins to delete
+  - list of plugins to disable
 
   - example:
 
     ```yml
-    rabbitmq_plugins_to_delete:
+    rabbitmq_plugins_to_disable:
       - rabbitmq_shovel
     ```
 

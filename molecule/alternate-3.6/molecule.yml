@@ -1,0 +1,55 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: molecule/resources/requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  options:
+    config-file: molecule/resources/yaml-lint.yml
+platforms:
+  - name: ansible-role-rabbitmq-ubuntu-bionic
+    image: ubuntu:bionic
+    command: "/lib/systemd/systemd"
+    docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /tmp
+      - /run
+    capabilities:
+      - SYS_ADMIN
+  - name: ansible-role-rabbitmq-debian-stretch
+    image: debian:stretch
+    command: "/lib/systemd/systemd"
+    docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /tmp
+      - /run
+    capabilities:
+      - SYS_ADMIN
+  - name: ansible-role-rabbitmq-centos-7
+    image: centos:7
+    command: "/usr/sbin/init"
+    docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /tmp
+      - /run
+    capabilities:
+      - SYS_ADMIN
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    create: create.yml
+    converge: playbook.yml
+    destroy: destroy.yml
+scenario:
+  name: alternate-3.6
