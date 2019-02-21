@@ -1,10 +1,12 @@
 #jinja2: trim_blocks: "true", lstrip_blocks: "false"
 [
+{% if rabbitmq_erlang_config != None and rabbitmq_erlang_config | d("") | length > 0 %}
 {% for line in rabbitmq_erlang_config.split('\n') %}
   {{ line }}
 {% endfor %}
+{% endif %}
 {% if __rabbitmq_cluster_nodes | d("") | length > 0 and rabbitmq_peer_discovery_classic %}
-  {% if rabbitmq_erlang_config | length > 0 %}
+  {% if rabbitmq_erlang_config != None and rabbitmq_erlang_config | d("") | length > 0 %}
   ,
   {% endif %}
   {rabbit, [

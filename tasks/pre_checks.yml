@@ -101,7 +101,8 @@
 - name: "[RabbitMQ] Test that the users to delete are not part of those to create"
   assert:
     that:
-      - (rabbitmq_users_to_create | map(attribute='user') | list) | intersect(rabbitmq_users_to_delete) | list | length == 0
+      - (rabbitmq_users_to_create | map(attribute='user') | list)
+        | intersect(rabbitmq_users_to_delete) | list | length == 0
   when:
     - rabbitmq_users_to_delete | length > 0
 
