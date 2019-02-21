@@ -1,7 +1,14 @@
 ansible-role-rabbitmq
 =========
 
-Ansible role to install RabbitMQ.
+Ansible role to install RabbitMQ from RabbitMQ repository.  
+Available on [Ansible Galaxy](https://galaxy.ansible.com/rockandska/rabbitmq)
+
+**Ansible Galaxy :**    
+![Galaxy Score](https://img.shields.io/ansible/quality/38029.svg)  
+
+**Travis Build :**  
+[![Build Status](https://travis-ci.com/rockandska/ansible-role-rabbitmq.png?branch=master)](https://travis-ci.com/rockandska/ansible-role-rabbitmq) 
 
 Requirements on remote hosts
 ------------
@@ -12,6 +19,7 @@ Requirements on remote hosts
 - socat
 - logrotate
 - python requests >= 1.0.0 ( if using bindings , exchanges, queues management provide by this role )
+- For a cluster, hosts part of the cluster should be resolvable by their hostnames
 
 #### Debian / Ubuntu
 
@@ -239,7 +247,7 @@ rabbitmq_hide_log: true
   - a multiline string with the rabbitmq config in erlang format to apply
   - will be used as rabbitmq.config for version <=3.6
   - will be used as advanced.conf for version >=3.7
-  - **don't enclose the configuration with *[* and *].* , it is done inside the template **
+  - **don't enclose the configuration with `[` and `].` , it is done inside the template**
   - example:
   ```yaml
   rabbitmq_erlang_config: |
@@ -324,7 +332,7 @@ rabbitmq_hide_log: true
 
   - not mandatory in standalone install
 
-  - **need to be a hostname/IP who exist in the inventory and should be the hostname resolvable by the hosts themselves**
+  - **need to be a hostname/IP who exist in the inventory**
 
   - Example:
 
@@ -381,7 +389,7 @@ rabbitmq_hide_log: true
     - `rabbitmq_exchanges_to_delete`
     - `rabbitmq_bindings_to_create`
     - `rabbitmq_bindings_to_delete`
-  - **Don't forget to configure rabbitmq_management to only allow connection from localhost**
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
 
 - `rabbitmq_management_password`
 
@@ -392,7 +400,7 @@ rabbitmq_hide_log: true
     - `rabbitmq_exchanges_to_delete`
     - `rabbitmq_bindings_to_create`
     - `rabbitmq_bindings_to_delete`
-  - **Don't forget to configure rabbitmq_management to only allow connection from localhost**
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
 
 - `rabbitmq_management_host`
 
@@ -402,7 +410,7 @@ rabbitmq_hide_log: true
     - `rabbitmq_exchanges_to_delete`
     - `rabbitmq_bindings_to_create`
     - `rabbitmq_bindings_to_delete`
-  - **Don't forget to configure rabbitmq_management to only allow connection from localhost**
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
 
 - `rabbitmq_management_port`
 
@@ -412,7 +420,7 @@ rabbitmq_hide_log: true
     - `rabbitmq_exchanges_to_delete`
     - `rabbitmq_bindings_to_create`
     - `rabbitmq_bindings_to_delete`
-  - **Don't forget to configure rabbitmq_management to only allow connection from localhost**
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
 
 - `rabbitmq_plugins_to_enable`
 
@@ -587,7 +595,7 @@ Example Playbook
 ```yaml
 - hosts: rabbitmq
   roles:
-  	- rockandska.erlang
+    - rockandska.erlang
     - rockandska.rabbitmq
 ```
 

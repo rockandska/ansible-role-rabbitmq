@@ -2,11 +2,11 @@
 - name: "[RabbitMQ] Set cluster config"
   set_fact:
     __rabbitmq_cluster_nodes: >-
-      'rabbit@{{ inventory_hostname }}',
+      'rabbit@{{ ansible_hostname }}',
       'rabbit@{{ play_hosts | map('extract',hostvars)
                             | selectattr('rabbitmq_slave_of','defined')
                             | selectattr('rabbitmq_slave_of', 'equalto', inventory_hostname)
-                            | map(attribute='inventory_hostname') | join("','rabbit@") }}'
+                            | map(attribute='ansible_hostname') | join("','rabbit@") }}'
   delegate_facts: true
   delegate_to: "{{ item }}"
   with_items:
@@ -40,19 +40,19 @@
 - name: "[RabbitMQ] Copy custom server config (erlang format)"
   template:
     src: "{{ rabbitmq_erlang_tpl }}"
-    dest: "/etc/rabbitmq/{{ ( rabbitmq_series is version('3.7', '>=') ) | ternary('advanced.config','rabbitmq.config') }}"
+    dest: "/etc/rabbitmq/{{ rabbitmq_series is version('3.7', '>=') | ternary('advanced.config','rabbitmq.config') }}"
     force: true
     mode: 0644
     owner: root
   notify:
     - restart rabbitmq
   when:
-    - rabbitmq_erlang_config | d("") | trim | length > 0
-    - rabbitmq_erlang_config != None
+    - (rabbitmq_erlang_config | d("") | trim | length > 0 and rabbitmq_erlang_config != None)
+      or __rabbitmq_cluster_nodes | d("") | trim | length != 0
 
 - name: "[RabbitMQ] Remove custom erlang config file if rabbitmq_erlang_config is empty"
   file:
-    path: "/etc/rabbitmq/{{ ( rabbitmq_series is version('3.7', '>=') ) | ternary('advanced.config','rabbitmq.config') }}"
+    path: "/etc/rabbitmq/{{ rabbitmq_series is version('3.7', '>=') | ternary('advanced.config','rabbitmq.config') }}"
     state: absent
   notify:
     - restart rabbitmq
