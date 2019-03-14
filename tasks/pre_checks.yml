@@ -7,8 +7,8 @@
       - vars[item] is none
         or vars[item] is string
   with_items:
-    - rabbitmq_rmp_repo_url
-    - rabbitmq_rmp_gpg_url
+    - rabbitmq_rpm_repo_url
+    - rabbitmq_rpm_gpg_url
     - rabbitmq_rpm_repo_tpl
     - rabbitmq_deb_repo_url
     - rabbitmq_deb_gpg_url

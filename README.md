@@ -43,8 +43,8 @@ rabbitmq_series: 3.7
 rabbitmq_series_rpm_version:
 rabbitmq_series_deb_version:
 
-rabbitmq_rmp_repo_url: https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server
-rabbitmq_rmp_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+rabbitmq_rpm_repo_url: https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server
+rabbitmq_rpm_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
 rabbitmq_rpm_repo_tpl: etc/yum.repos.d/rabbitmq.repo.j2
 
 rabbitmq_deb_repo_url: https://dl.bintray.com/rabbitmq/debian
@@ -139,11 +139,11 @@ rabbitmq_hide_log: true
 
   - should be a float (3.6,3.7 available at 02.01.2019)
 
-- `rabbitmq_rmp_repo_url`
+- `rabbitmq_rpm_repo_url`
 
   - repository base url used for the yum template
 
-- `rabbitmq_rmp_gpg_url`
+- `rabbitmq_rpm_gpg_url`
 
   - gpg key to used for the yum template
 
