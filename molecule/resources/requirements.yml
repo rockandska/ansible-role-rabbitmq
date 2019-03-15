@@ -1,4 +1,4 @@
 ---
-- src: https://github.com/rockandska/ansible-role-erlang.git
-  scm: git
-  version: 0.0.1
+- src: rockandska.erlang
+  name: ansible-role-erlang
+  version: 0.0.2
