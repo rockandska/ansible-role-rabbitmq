@@ -1,6 +1,12 @@
 # Change Log
 
-## ['0.0.2'](https://github.com/rockandska/ansible-role-rabbitmq/tree/'0.0.2') (2019-02-21)
+## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
+
+**Merged pull requests:**
+
+- Fix typo in repo/gpg url variable name [\#2](https://github.com/rockandska/ansible-role-rabbitmq/pull/2) ([rockandska](https://github.com/rockandska))
+
+## [0.0.2](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.2) (2019-02-21)
 **Merged pull requests:**
 
 - Fix cluster config [\#1](https://github.com/rockandska/ansible-role-rabbitmq/pull/1) ([rockandska](https://github.com/rockandska))
