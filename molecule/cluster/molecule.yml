@@ -11,6 +11,8 @@ lint:
     config-file: molecule/resources/yaml-lint.yml
 platforms:
   - name: ansible-role-rabbitmq-ubuntu-bionic
+    groups:
+      - rabbitmq-master
     image: ubuntu:bionic
     command: "/lib/systemd/systemd"
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
@@ -23,13 +25,9 @@ platforms:
       - SYS_ADMIN
     networks:
       - name: ansible-role-rabbitmq-cluster
-    exposed_ports:
-      - 4369/tcp
-      - 5671/tcp
-      - 5672/tcp
-      - 15672/tcp
-      - 25672/tcp
   - name: ansible-role-rabbitmq-debian-stretch
+    groups:
+      - rabbitmq-slave
     image: debian:stretch
     command: "/lib/systemd/systemd"
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
@@ -42,13 +40,9 @@ platforms:
       - SYS_ADMIN
     networks:
       - name: ansible-role-rabbitmq-cluster
-    exposed_ports:
-      - 4369/tcp
-      - 5671/tcp
-      - 5672/tcp
-      - 15672/tcp
-      - 25672/tcp
   - name: ansible-role-rabbitmq-centos-7
+    groups:
+      - rabbitmq-slave
     image: centos:7
     command: "/usr/sbin/init"
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
@@ -61,15 +55,86 @@ platforms:
       - SYS_ADMIN
     networks:
       - name: ansible-role-rabbitmq-cluster
-    exposed_ports:
-      - 4369/tcp
-      - 5671/tcp
-      - 5672/tcp
-      - 15672/tcp
-      - 25672/tcp
 provisioner:
   name: ansible
   inventory:
+    group_vars:
+      all:
+        rabbitmq_sysctl_config:
+          listeners:
+            tcp:
+              default: 5672
+        rabbitmq_erlang_config: |
+            {rabbit,
+              [
+                {default_vhost,       <<"to_delete">>},
+                {default_user,        <<"guest_delete">>},
+                {default_pass,        <<"guest_delete">>},
+                {default_permissions, [<<".*">>, <<".*">>, <<".*">>]},
+                {default_user_tags, [administrator]}
+              ]
+            }
+        rabbitmq_systemd_override:
+          Service:
+            LimitNOFILE: 50000
+        rabbitmq_custom_logrotate: |
+          weekly
+          missingok
+          rotate 40
+          compress
+          notifempty
+        rabbitmq_users_to_create:
+          - user: admin
+            password: admin
+            vhost: vhost_test
+            configure_priv: .*
+            read_priv: .*
+            write_priv: .*
+            tags: administrator
+        rabbitmq_management_user: admin
+        rabbitmq_management_password: admin
+        rabbitmq_plugins_to_enable:
+          - rabbitmq_management
+        rabbitmq_plugins_to_disable:
+          - rabbitmq_shovel
+        rabbitmq_vhosts_to_delete:
+          - to_delete
+        rabbitmq_vhosts_to_create:
+          - name: vhost_test
+        rabbitmq_users_to_delete:
+          - guest_delete
+        rabbitmq_queues_to_create:
+          - name: queue_test
+            vhost: vhost_test
+        rabbitmq_queues_to_delete:
+          - name: queue_not_exist
+            vhost: vhost_not_exist
+        rabbitmq_exchanges_to_create:
+          - name: exchange_test
+            vhost: vhost_test
+        rabbitmq_exchanges_to_delete:
+          - name: exchange_not_exist
+            vhost: vhost_not_exist
+        rabbitmq_bindings_to_create:
+          - name: exchange_test
+            destination: queue_test
+            destination_type: queue
+            vhost: vhost_test
+        rabbitmq_bindings_to_delete:
+          - name: exchange_not_exist
+            destination: queue_test
+            destination_type: queue
+            vhost: vhost_test
+        rabbitmq_policies_to_create:
+          - name: HA
+            vhost: vhost_test
+            pattern: .*
+            tags:
+              ha-mode: all
+        rabbitmq_policies_to_delete:
+          - name: HA_not_exist
+            vhost: vhost_test
+        rabbitmq_hide_log: false
     host_vars:
       ansible-role-rabbitmq-ubuntu-bionic:
         rabbitmq_is_master: true
