@@ -46,6 +46,8 @@ rabbitmq_series_deb_version:
 rabbitmq_rpm_repo_url: https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server
 rabbitmq_rpm_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
 rabbitmq_rpm_repo_tpl: etc/yum.repos.d/rabbitmq.repo.j2
+rabbitmq_rpm_disable_repo:
+rabbitmq_rpm_enable_repo:
 
 rabbitmq_deb_repo_url: https://dl.bintray.com/rabbitmq/debian
 rabbitmq_deb_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
@@ -164,6 +166,30 @@ rabbitmq_hide_log: true
     3.7.10-1.el7
     3.7.9-1.el7
     3.7.8-1.el7
+    ```
+
+- `rabbitmq_rpm_disable_repo`
+
+  - used if you want to use the capability to disable some repositories when installing rabbitmq
+
+  - default: ""
+
+  - example:
+
+    ```
+    rabbitmq_rpm_disable_repo: "*"
+    ```
+
+- `rabbitmq_rpm_enable_repo`
+
+  - used if you want to use the capability to enable only some repositories in case you use `rabbitmq_rpm_disable_repo: "*"` when installing rabbitmq
+
+  - default: ""
+
+  - example:
+
+    ```
+    rabbitmq_rpm_enable_repo: "rabbitmq"
     ```
 
 - `rabbitmq_deb_repo_url`

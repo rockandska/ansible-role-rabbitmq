@@ -10,5 +10,5 @@
   yum:
     name: "rabbitmq-server{{ rabbitmq_series_rpm_version | ternary ('-' + (rabbitmq_series_rpm_version | string),'') }}"
     state: present
-    disablerepo: "*"
-    enablerepo: "rabbitmq"
+    disablerepo: "{{ rabbitmq_rpm_disable_repo | d(omit, true) }}"
+    enablerepo: "{{ rabbitmq_rpm_enable_repo | d(omit, true) }}"
