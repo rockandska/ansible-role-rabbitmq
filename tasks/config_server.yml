@@ -1,18 +1,58 @@
 ---
-- name: "[RabbitMQ] Set cluster config"
+- name: "Gather facts from master/slave nodes"
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  with_items: "{{
+                (
+                  groups['all']
+                    | map('extract',hostvars)
+                    | selectattr('rabbitmq_slave_of','defined')
+                    | map(attribute='inventory_hostname')
+                    | list
+                )
+                +
+                (
+                  groups['all']
+                    | map('extract',hostvars)
+                    | selectattr('rabbitmq_is_master','defined')
+                    | map(attribute='inventory_hostname')
+                    | list
+                )
+              }}"
+  run_once: true
+  when:
+    - hostvars[item]['ansible_hostname'] is not defined
+    - rabbitmq_is_master
+      or rabbitmq_slave_of != none
+      or rabbitmq_slave_of | d("") | length > 0
+
+- name: "[RabbitMQ] Define cluster config for master"
   set_fact:
     __rabbitmq_cluster_nodes: >-
       'rabbit@{{ ansible_hostname }}',
-      'rabbit@{{ play_hosts | map('extract',hostvars)
-                            | selectattr('rabbitmq_slave_of','defined')
-                            | selectattr('rabbitmq_slave_of', 'equalto', inventory_hostname)
-                            | map(attribute='ansible_hostname') | join("','rabbit@") }}'
-  delegate_facts: true
-  delegate_to: "{{ item }}"
-  with_items:
-    - "{{ play_hosts }}"
+      'rabbit@{{ groups['all']
+                    | map('extract',hostvars)
+                    | selectattr('rabbitmq_slave_of','defined')
+                    | selectattr('rabbitmq_slave_of', 'equalto', inventory_hostname)
+                    | map(attribute='ansible_hostname') | join("','rabbit@")
+              }}'
   when:
     - rabbitmq_is_master
+
+- name: "[RabbitMQ] Define cluster config for slave"
+  set_fact:
+    __rabbitmq_cluster_nodes: >-
+      'rabbit@{{ hostvars[rabbitmq_slave_of].ansible_hostname }}',
+      'rabbit@{{ groups['all']
+                    | map('extract',hostvars)
+                    | selectattr('rabbitmq_slave_of','defined')
+                    | selectattr('rabbitmq_slave_of', 'equalto', rabbitmq_slave_of)
+                    | map(attribute='ansible_hostname') | join("','rabbit@")
+              }}'
+  when:
+    - rabbitmq_slave_of != none
+    - rabbitmq_slave_of | d("") | length > 0
 
 - name: "[RabbitMQ] Copy custom server config (sysctl format)"
   template:

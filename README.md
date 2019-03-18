@@ -326,13 +326,13 @@ rabbitmq_hide_log: true
 
 - `rabbitmq_slave_of`
 
-  - hostname of the master to join
+  - inventory name of the master to join
 
   - tag the host as a slave
 
   - not mandatory in standalone install
 
-  - **need to be a hostname/IP who exist in the inventory**
+  - **need to be a hostname/IP/alias who exist in the inventory**
 
   - Example:
 
@@ -592,12 +592,36 @@ rabbitmq_hide_log: true
 Example Playbook
 ----------------
 
+#### Standalone
+
 ```yaml
 - hosts: rabbitmq
   roles:
     - rockandska.erlang
     - rockandska.rabbitmq
 ```
+
+#### Cluster
+
+Since it is require to have the master node started before getting the slaves joining, do the cluster deployment in two steps.
+
+```yaml
+- hosts: rabbitmq-master
+  roles:
+    - role: rockandska.erlang
+    - role: rockandska.rabbitmq
+      vars:
+        rabbitmq_is_master: true
+
+- hosts: rabbitmq-slave
+  roles:
+    - role: rockandska.erlang
+    - role: rockandska.rabbitmq
+      vars:
+        rabbitmq_slave_of: rabbitmq-master
+```
+
+
 
 Local Testing
 -------------
