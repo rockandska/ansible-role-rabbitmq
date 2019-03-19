@@ -9,6 +9,8 @@ rabbitmq_series_deb_version:
 rabbitmq_rpm_repo_url: https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server
 rabbitmq_rpm_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
 rabbitmq_rpm_repo_tpl: etc/yum.repos.d/rabbitmq.repo.j2
+rabbitmq_rpm_disable_repo:
+rabbitmq_rpm_enable_repo:
 
 rabbitmq_deb_repo_url: https://dl.bintray.com/rabbitmq/debian
 rabbitmq_deb_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
