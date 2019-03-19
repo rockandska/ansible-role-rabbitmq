@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.0.4](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.4) (2019-03-19)
+**Merged pull requests:**
+
+- Optionnal disable/enable repository for yum [\#4](https://github.com/rockandska/ansible-role-rabbitmq/pull/4) ([rockandska](https://github.com/rockandska))
+
 ## [0.0.3](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.3) (2019-03-18)
 **Merged pull requests:**
 
