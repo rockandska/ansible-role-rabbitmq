@@ -3,9 +3,9 @@
 - name: "[RabbitMQ] Test variables type: string"
   assert:
     that:
-      - vars[item] is defined
-      - vars[item] is none
-        or vars[item] is string
+      - "{{ item }} is defined"
+      - "{{ item }} is none
+        or {{ item }} is string"
   with_items:
     - rabbitmq_rpm_repo_url
     - rabbitmq_rpm_gpg_url
@@ -31,9 +31,9 @@
 - name: "[RabbitMQ] Test variables type: number"
   assert:
     that:
-      - vars[item] is defined
-      - vars[item] is none
-        or vars[item] is number
+      - "{{ item }} is defined"
+      - "{{ item }} is none
+        or {{ item }} is number"
   with_items:
     - rabbitmq_series
     - rabbitmq_management_port
@@ -41,8 +41,8 @@
 - name: "[RabbitMQ] Test variables type: list"
   assert:
     that:
-      - vars[item] is defined
-      - vars[item] is iterable
+      - "{{ item }} is defined"
+      - "{{ item }} is iterable"
   with_items:
     - rabbitmq_vars_files
     - rabbitmq_vhosts_to_delete
@@ -62,8 +62,8 @@
 - name: "[RabbitMQ] Test variables type: dict"
   assert:
     that:
-      - vars[item] is defined
-      - vars[item] is mapping
+      - "{{ item }} is defined"
+      - "{{ item }} is mapping"
   with_items:
     - rabbitmq_sysctl_config
     - rabbitmq_systemd_override
@@ -71,8 +71,8 @@
 - name: "[RabbitMQ] Test variables type: boolean"
   assert:
     that:
-      - vars[item] is defined
-      - vars[item] is not string
+      - "{{ item }} is defined"
+      - "{{ item }} is not string"
   with_items:
     - rabbitmq_is_master
     - rabbitmq_peer_discovery_classic
@@ -109,9 +109,9 @@
 - name: "[RabbitMQ] Test that management credentials are defined if asked to delete 'guest' user"
   assert:
     that:
-      - vars[item] is defined
-      - vars[item] is not none
-      - vars[item] | length > 0
+      - "{{ item }} is defined"
+      - "{{ item }} is not none"
+      - "{{ item }} | length > 0"
   with_items:
     - rabbitmq_management_user
     - rabbitmq_management_password
