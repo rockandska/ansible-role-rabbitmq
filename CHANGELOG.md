@@ -1,5 +1,11 @@
 # Change Log
 
+## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
+
+**Merged pull requests:**
+
+- Fix pre\_check syntax [\#5](https://github.com/rockandska/ansible-role-rabbitmq/pull/5) ([rockandska](https://github.com/rockandska))
+
 ## [0.0.4](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.4) (2019-03-19)
 **Merged pull requests:**
 
