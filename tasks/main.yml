@@ -10,9 +10,21 @@
 
 - import_tasks: pre_checks.yml
 
+- name: "[RabbitMQ] Mask rabbitmq service to prevent it to start at the install"
+  systemd:
+    name: "rabbitmq-server"
+    masked: true
+  changed_when: false
+
 - include_tasks: "{{ item }}"
   with_first_found:
     - "config_{{ ansible_os_family }}.yml"
+
+- name: "[RabbitMQ] Unmask rabbitmq service"
+  systemd:
+    name: "rabbitmq-server"
+    masked: false
+  changed_when: false
 
 - import_tasks: config_logrotate.yml
 
