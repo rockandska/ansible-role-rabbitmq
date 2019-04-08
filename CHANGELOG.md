@@ -1,9 +1,9 @@
 # Change Log
 
-## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
-
+## [0.0.5](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.5) (2019-04-08)
 **Merged pull requests:**
 
+- Prevent service to start at install [\#6](https://github.com/rockandska/ansible-role-rabbitmq/pull/6) ([rockandska](https://github.com/rockandska))
 - Fix pre\_check syntax [\#5](https://github.com/rockandska/ansible-role-rabbitmq/pull/5) ([rockandska](https://github.com/rockandska))
 
 ## [0.0.4](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.4) (2019-03-19)
