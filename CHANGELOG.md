@@ -1,5 +1,11 @@
 # Change Log
 
+## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
+
+**Merged pull requests:**
+
+- \[pre\_checks\] remove test on variables type [\#8](https://github.com/rockandska/ansible-role-rabbitmq/pull/8) ([rockandska](https://github.com/rockandska))
+
 ## [0.0.5](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.5) (2019-04-08)
 **Merged pull requests:**
 
