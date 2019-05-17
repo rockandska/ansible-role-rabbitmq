@@ -5,15 +5,17 @@
   register: stat_rabbitmq_cookie
   changed_when: false
   when:
-    - rabbitmq_is_master
+    - not rabbitmq_slave_of
 
 - name: "[RabbitMQ] Generate erlang cookie for master nodes if needed"
   shell: |
-    set -o pipefail; tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32 | base64
+    set -o pipefail; head -c 2500 /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 32 | base64
+  args:
+    executable: /bin/bash
   register: tmp_rabbitmq_cookie
   changed_when: false
   when:
-    - rabbitmq_is_master
+    - not rabbitmq_slave_of
     - not stat_rabbitmq_cookie.stat.exists
 
 - name: "[RabbitMQ] Copy erlang cookie to master nodes if needed"
@@ -25,20 +27,22 @@
     group: rabbitmq
   notify: restart rabbitmq
   when:
-    - rabbitmq_is_master
+    - not rabbitmq_slave_of
     - not stat_rabbitmq_cookie.stat.exists
 
 - name: "[RabbitMQ] Get cookie from master nodes"
   slurp:
     src: /var/lib/rabbitmq/.erlang.cookie
+  delegate_to: "{{ rabbitmq_slave_of | d('') }}"
   register: rabbitmq_cookie
   changed_when: false
   when:
-    - rabbitmq_is_master
+    - rabbitmq_slave_of is not none
+    - rabbitmq_slave_of | trim | length > 0
 
 - name: "[RabbitMQ] Update cookie on slaves"
   copy:
-    content: "{{ hostvars[ rabbitmq_slave_of ].rabbitmq_cookie.content | b64decode }}"
+    content: "{{ rabbitmq_cookie.content | b64decode }}"
     dest: /var/lib/rabbitmq/.erlang.cookie
     mode: 0400
     owner: rabbitmq
@@ -47,3 +51,4 @@
   notify: restart rabbitmq
   when:
     - rabbitmq_slave_of is not none
+    - rabbitmq_slave_of | trim | length > 0
