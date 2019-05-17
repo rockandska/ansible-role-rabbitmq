@@ -1,12 +1,13 @@
 ---
 
-- name: "[RabbitMQ] Test variables type: string"
+- name: "[RabbitMQ] Test that variables are defined"
   assert:
     that:
       - "{{ item }} is defined"
-      - "{{ item }} is none
-        or {{ item }} is string"
   with_items:
+    - rabbitmq_series
+    - rabbitmq_series_rpm_version
+    - rabbitmq_series_deb_version
     - rabbitmq_rpm_repo_url
     - rabbitmq_rpm_gpg_url
     - rabbitmq_rpm_repo_tpl
@@ -14,68 +15,58 @@
     - rabbitmq_deb_gpg_url
     - rabbitmq_deb_repo_tpl
     - rabbitmq_deb_pinning_tpl
+    - rabbitmq_vars_files
+    - rabbitmq_sysctl_tpl
+    - rabbitmq_sysctl_config
+    - rabbitmq_erlang_tpl
     - rabbitmq_erlang_config
+    - rabbitmq_systemd_override_tpl
+    - rabbitmq_systemd_override
+    - rabbitmq_custom_logrotate_tpl
+    - rabbitmq_custom_logrotate
+    - rabbitmq_is_master
+    - rabbitmq_slave_of
+    - rabbitmq_peer_discovery_classic
+    - rabbitmq_cluster_node_type
+    - rabbitmq_plugins_to_enable
+    - rabbitmq_plugins_to_disable
+    - rabbitmq_users_to_create
+    - rabbitmq_users_to_delete
+    - rabbitmq_management_user
+    - rabbitmq_management_password
+    - rabbitmq_management_host
+    - rabbitmq_management_port
+    - rabbitmq_vhosts_to_create
+    - rabbitmq_vhosts_to_delete
+    - rabbitmq_queues_to_create
+    - rabbitmq_queues_to_delete
+    - rabbitmq_bindings_to_create
+    - rabbitmq_bindings_to_delete
+    - rabbitmq_exchanges_to_create
+    - rabbitmq_exchanges_to_delete
+    - rabbitmq_policies_to_create
+    - rabbitmq_policies_to_delete
+    - rabbitmq_hide_log
+
+- name: "[RabbitMQ] Test that variables are not empty"
+  assert:
+    that:
+      - "{{ item }} != None"
+      - "{{ item }} | trim | length > 0"
+  with_items:
+    - rabbitmq_series
+    - rabbitmq_rpm_repo_url
+    - rabbitmq_rpm_repo_tpl
+    - rabbitmq_deb_repo_url
+    - rabbitmq_deb_repo_tpl
+    - rabbitmq_deb_pinning_tpl
     - rabbitmq_sysctl_tpl
     - rabbitmq_erlang_tpl
     - rabbitmq_systemd_override_tpl
     - rabbitmq_custom_logrotate_tpl
-    - rabbitmq_custom_logrotate
-    - rabbitmq_slave_of
-    - rabbitmq_management_user
-    - rabbitmq_management_password
-    - rabbitmq_management_host
-    - rabbitmq_cluster_node_type
-    - rabbitmq_series_rpm_version
-    - rabbitmq_series_deb_version
-
-- name: "[RabbitMQ] Test variables type: number"
-  assert:
-    that:
-      - "{{ item }} is defined"
-      - "{{ item }} is none
-        or {{ item }} is number"
-  with_items:
-    - rabbitmq_series
-    - rabbitmq_management_port
-
-- name: "[RabbitMQ] Test variables type: list"
-  assert:
-    that:
-      - "{{ item }} is defined"
-      - "{{ item }} is iterable"
-  with_items:
-    - rabbitmq_vars_files
-    - rabbitmq_vhosts_to_delete
-    - rabbitmq_vhosts_to_create
-    - rabbitmq_users_to_delete
-    - rabbitmq_users_to_create
-    - rabbitmq_plugins_to_enable
-    - rabbitmq_queues_to_delete
-    - rabbitmq_queues_to_create
-    - rabbitmq_bindings_to_delete
-    - rabbitmq_bindings_to_create
-    - rabbitmq_exchanges_to_delete
-    - rabbitmq_exchanges_to_create
-    - rabbitmq_policies_to_delete
-    - rabbitmq_policies_to_create
-
-- name: "[RabbitMQ] Test variables type: dict"
-  assert:
-    that:
-      - "{{ item }} is defined"
-      - "{{ item }} is mapping"
-  with_items:
-    - rabbitmq_sysctl_config
-    - rabbitmq_systemd_override
-
-- name: "[RabbitMQ] Test variables type: boolean"
-  assert:
-    that:
-      - "{{ item }} is defined"
-      - "{{ item }} is not string"
-  with_items:
-    - rabbitmq_is_master
     - rabbitmq_peer_discovery_classic
+    - rabbitmq_cluster_node_type
+    - rabbitmq_hide_log
 
 - name: "[RabbitMQ] Test that there is as least one vhost to create if there is some to delete"
   assert:
@@ -110,7 +101,7 @@
   assert:
     that:
       - "{{ item }} is defined"
-      - "{{ item }} is not none"
+      - "{{ item }} != None"
       - "{{ item }} | length > 0"
   with_items:
     - rabbitmq_management_user
