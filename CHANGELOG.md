@@ -1,9 +1,9 @@
 # Change Log
 
-## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
-
+## [0.0.6](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.6) (2019-05-28)
 **Merged pull requests:**
 
+- \[cookie\] fix bash broken pipe \( fix \#7 \) [\#9](https://github.com/rockandska/ansible-role-rabbitmq/pull/9) ([rockandska](https://github.com/rockandska))
 - \[pre\_checks\] remove test on variables type [\#8](https://github.com/rockandska/ansible-role-rabbitmq/pull/8) ([rockandska](https://github.com/rockandska))
 
 ## [0.0.5](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.5) (2019-04-08)
