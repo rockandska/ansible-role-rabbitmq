@@ -39,8 +39,8 @@
 - meta: flush_handlers
 
 - name: "[RabbitMQ] Ensure rabbitmq is started and enabled"
-  service:
-    name: "rabbitmq-server"
+  systemd:
+    name: "rabbitmq-server.service"
     state: "started"
     enabled: "true"
 
