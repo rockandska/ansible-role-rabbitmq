@@ -1,5 +1,15 @@
 # Change Log
 
+## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
+
+**Closed issues:**
+
+- Cookie creation [\#7](https://github.com/rockandska/ansible-role-rabbitmq/issues/7)
+
+**Merged pull requests:**
+
+- Fix enable systemd service with ansible 2.5 [\#10](https://github.com/rockandska/ansible-role-rabbitmq/pull/10) ([rockandska](https://github.com/rockandska))
+
 ## [0.0.6](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.6) (2019-05-28)
 **Merged pull requests:**
 
