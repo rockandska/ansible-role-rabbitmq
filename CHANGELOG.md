@@ -8,6 +8,7 @@
 
 **Merged pull requests:**
 
+- Fix CI/tests errors [\#12](https://github.com/rockandska/ansible-role-rabbitmq/pull/12) ([rockandska](https://github.com/rockandska))
 - Fix enable systemd service with ansible 2.5 [\#10](https://github.com/rockandska/ansible-role-rabbitmq/pull/10) ([rockandska](https://github.com/rockandska))
 
 ## [0.0.6](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.6) (2019-05-28)
