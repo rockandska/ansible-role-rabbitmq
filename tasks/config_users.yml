@@ -10,7 +10,7 @@
     permissions: "{{ item.permissions | default(omit) }}"
     tags: "{{ item.tags | default(omit) }}"
     update_password: "{{ item.update_password | default(omit) }}"
-  no_log: true
+  no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_users_to_create }}"
   when:
