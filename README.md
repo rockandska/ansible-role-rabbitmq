@@ -286,11 +286,7 @@ rabbitmq_hide_log: true
     {rabbit, [
         {tcp_listeners, [{"127.0.0.1", 5672}]}
       ]
-    }##############
-     # Parameters #
-     ##############
-     rabbitmq_parameters_to_create: []
-     rabbitmq_parameters_to_delete: []
+    }
   ```
 
 - `rabbitmq_systemd_override_tpl`
