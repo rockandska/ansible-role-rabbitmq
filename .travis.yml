@@ -27,6 +27,12 @@ jobs:
     - <<: *test-tox
       env:
         - ANSIBLE=2.7
+    - <<: *test-tox
+        env:
+        - ANSIBLE=2.8
+    - <<: *test-tox
+        env:
+        - ANSIBLE=2.9
     - stage: mkrelease
       install:
         - pip install git-semver ansible
