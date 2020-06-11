@@ -55,6 +55,8 @@
     - rabbitmq_management_ca_cert
     - rabbitmq_management_client_cert
     - rabbitmq_management_client_key
+    - rabbitmq_parameters_to_create
+    - rabbitmq_parameters_to_delete
 
 - name: "[RabbitMQ] Test that variables are not empty"
   assert:

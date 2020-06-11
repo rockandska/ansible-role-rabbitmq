@@ -34,6 +34,7 @@ rabbitmq_management_user: admin
 rabbitmq_management_password: admin
 rabbitmq_plugins_to_enable:
   - rabbitmq_management
+  - rabbitmq_federation
 rabbitmq_plugins_to_disable:
   - rabbitmq_shovel
 rabbitmq_vhosts_to_delete:
@@ -72,6 +73,17 @@ rabbitmq_policies_to_create:
       ha-mode: all
 rabbitmq_policies_to_delete:
   - name: HA_not_exist
+    vhost: vhost_test
+rabbitmq_parameters_to_create:
+  - name: federation-test
+    component: federation-upstream
+    value:
+      uri: amqp://admin:admin@localhost
+      prefetch-count: 1
+    vhost: vhost_test
+rabbitmq_parameters_to_delete:
+  - name: not_exist
+    component: federation-upstream
     vhost: vhost_test
 rabbitmq_hide_log: false
 rabbitmq_users_groups:
