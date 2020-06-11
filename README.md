@@ -158,6 +158,12 @@ rabbitmq_bindings_to_delete: []
 rabbitmq_policies_to_create: []
 rabbitmq_policies_to_delete: []
 
+##############
+# Parameters #
+##############
+rabbitmq_parameters_to_create: []
+rabbitmq_parameters_to_delete: []
+
 #########
 # Debug #
 #########
@@ -741,10 +747,44 @@ rabbitmq_hide_log: true
         vhost: vhost_test
     ```
 
+- `rabbitmq_parameters_to_create`
+
+  - list of parameters to create
+
+  - refer to [ansible doc](https://docs.ansible.com/ansible/latest/modules/rabbitmq_parameter_module.html) for mandatory options and version compatibility
+
+  - `value` will be converted to json in the task
+
+  - example:
+
+    ```yaml
+     rabbitmq_parameters_to_create:
+       - name: federation-test
+         component: federation-upstream
+         value:
+           uri: amqp://admin:admin@localhost
+           prefetch-count: 1
+         vhost: vhost_test
+    ```
+
+- `rabbitmq_parameters_to_delete`
+
+  - list of parameters to delete
+
+  - refer to [ansible doc](https://docs.ansible.com/ansible/latest/modules/rabbitmq_parameter_module.html) for mandatory options and version compatibility
+
+  - example:
+
+    ```yaml
+    rabbitmq_parameters_to_delete:
+      - component: federation
+        name: local-username
+    ```
+
 - `rabbitmq_hide_log`
 
   - default: true
-  - don't show the log for api calls to avoid leak of sensible informations
+  - don't show the log for api calls to avoid leaking of sensitive information
   - set to false for debug
 
 Example Playbook
