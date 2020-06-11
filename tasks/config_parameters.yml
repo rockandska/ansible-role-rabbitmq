@@ -1,0 +1,25 @@
+---
+
+- name: "[RabbitMQ] Create parameters"
+  rabbitmq_parameter:
+    component: "{{ item.component }}"
+    name: "{{ item.name }}"
+    vhost: "{{ item.vhost | default(omit)  }}"
+    value: "{{ item.value | default(omit)  }}"
+    node: "{{ item.node | default(omit) }}"
+  with_items:
+    - "{{ rabbitmq_parameters_to_create }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
+
+- name: "[RabbitMQ] Delete unwanted parameters"
+  rabbitmq_parameter:
+    component: "{{ item.name | default(omit) }}"
+    name: "{{ item.vhost | default(omit) }}"
+    state: absent
+  with_items:
+    - "{{ rabbitmq_parameters_to_delete }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
