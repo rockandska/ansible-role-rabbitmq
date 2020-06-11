@@ -129,6 +129,12 @@ rabbitmq_bindings_to_delete: []
 rabbitmq_policies_to_create: []
 rabbitmq_policies_to_delete: []
 
+##############
+# Parameters #
+##############
+rabbitmq_parameters_to_create: []
+rabbitmq_parameters_to_delete: []
+
 #########
 # Debug #
 #########
@@ -280,7 +286,11 @@ rabbitmq_hide_log: true
     {rabbit, [
         {tcp_listeners, [{"127.0.0.1", 5672}]}
       ]
-    }
+    }##############
+     # Parameters #
+     ##############
+     rabbitmq_parameters_to_create: []
+     rabbitmq_parameters_to_delete: []
   ```
 
 - `rabbitmq_systemd_override_tpl`
@@ -609,10 +619,42 @@ rabbitmq_hide_log: true
         vhost: vhost_test
     ```
 
+- `rabbitmq_parameters_to_create`
+
+  - list of parameters to create
+
+  - refer to [ansible doc](https://docs.ansible.com/ansible/latest/modules/rabbitmq_parameter_module.html) for mandatory options and version compatibility
+  
+  - refer to [this ansible bug report](https://github.com/ansible/ansible/issues/43027) for possible json formatting issues that may occur
+  
+  - example:
+
+    ```yaml
+     rabbitmq_parameters_to_create:
+       - component: federation
+         name: local-username
+         value: '"guest"'
+         vhost: vhost_test
+    ```
+
+- `rabbitmq_parameters_to_delete`
+
+  - list of parameters to delete
+
+  - refer to [ansible doc](https://docs.ansible.com/ansible/latest/modules/rabbitmq_parameter_module.html) for mandatory options and version compatibility
+
+  - example:
+
+    ```yaml
+    rabbitmq_parameters_to_delete:
+      - component: federation
+        name: local-username
+    ```
+
 - `rabbitmq_hide_log`
 
   - default: true
-  - don't show the log for api calls to avoid leak of sensible informations
+  - don't show the log for api calls to avoid leaking of sensitive information
   - set to false for debug
 
 Example Playbook

@@ -53,3 +53,7 @@
 - import_tasks: config_exchanges.yml
 
 - import_tasks: config_bindings.yml
+
+- import_tasks: config_parameters.yml
+
+- import_tasks: config_policies.yml

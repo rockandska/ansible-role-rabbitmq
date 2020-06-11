@@ -92,6 +92,13 @@ rabbitmq_bindings_to_delete: []
 rabbitmq_policies_to_create: []
 rabbitmq_policies_to_delete: []
 
+
+##############
+# Parameters #
+##############
+rabbitmq_parameters_to_create: []
+rabbitmq_parameters_to_delete: []
+
 #########
 # Debug #
 #########
