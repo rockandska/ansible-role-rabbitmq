@@ -4,7 +4,7 @@
   become: true
   any_errors_fatal: true
   roles:
-    - ansible-role-erlang
+    - { role: ansible-role-erlang, erlang_series: 20 }
     - ansible-role-rabbitmq
   vars:
     rabbitmq_series: 3.6

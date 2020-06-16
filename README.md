@@ -15,7 +15,7 @@ Requirements on remote hosts
 
 #### All distro
 
-- [ansible-role-erlang](https://galaxy.ansible.com/rockandska/erlang) applied
+- [ansible-role-erlang](https://galaxy.ansible.com/rockandska/erlang) applied (**don't forget to use an erlang serie compatible with the rabbitmq version who will be installed. See [rabbitmq documentation](https://www.rabbitmq.com/which-erlang.html)**)
 - socat
 - logrotate
 - python requests >= 1.0.0 ( if using bindings , exchanges, queues management provide by this role )
