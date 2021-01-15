@@ -20,12 +20,27 @@
                     | list
                 )
               }}"
-  run_once: true
   when:
     - hostvars[item]['ansible_hostname'] is not defined
-    - rabbitmq_is_master
-      or (rabbitmq_slave_of != none
-          and rabbitmq_slave_of | d("") | length > 0)
+    - (
+        hostvars[item]['rabbitmq_is_master'] | d(False)
+          and (
+                 hostvars[item]['inventory_hostname'] == inventory_hostname
+                   or (
+                        rabbitmq_slave_of != none
+                        and hostvars[item]['inventory_hostname'] == rabbitmq_slave_of
+                      )
+               )
+      )
+      or
+      (
+        'rabbitmq_slave_of' in hostvars[item]
+          and hostvars[item]['rabbitmq_slave_of'] != none
+          and (
+                hostvars[item]['rabbitmq_slave_of'] == inventory_hostname
+                  or hostvars[item]['inventory_hostname'] == inventory_hostname
+              )
+      )
 
 - name: "[RabbitMQ] Define cluster config for master"
   set_fact:
