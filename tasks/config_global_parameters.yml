@@ -1,0 +1,22 @@
+---
+- name: "[RabbitMQ] Create global parameters"
+  rabbitmq_global_parameter:
+    name: "{{ item.name }}"
+    value: "{{ omit if not (item.value | default(None)) else item.value | to_json }}"
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
+  with_items:
+    - "{{ rabbitmq_global_parameters_to_create }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
+
+- name: "[RabbitMQ] Delete unwanted global parameters"
+  rabbitmq_global_parameter:
+    name: "{{ item.name }}"
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
+    state: absent
+  with_items:
+    - "{{ rabbitmq_global_parameters_to_delete }}"
+  when:
+    - rabbitmq_is_master
+      or rabbitmq_slave_of is none
