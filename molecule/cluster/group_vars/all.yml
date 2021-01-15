@@ -85,6 +85,11 @@ rabbitmq_parameters_to_delete:
   - name: not_exist
     component: federation-upstream
     vhost: vhost_test
+rabbitmq_global_parameters_to_create:
+  - name: cluster_name
+    value: mq-cluster
+rabbitmq_global_parameters_to_delete:
+  - name: cluster_name_not_exist
 rabbitmq_hide_log: false
 rabbitmq_users_groups:
   - name: rabbitmq
