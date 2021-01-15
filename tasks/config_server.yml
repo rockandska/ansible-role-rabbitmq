@@ -24,8 +24,8 @@
   when:
     - hostvars[item]['ansible_hostname'] is not defined
     - rabbitmq_is_master
-      or rabbitmq_slave_of != none
-      or rabbitmq_slave_of | d("") | length > 0
+      or (rabbitmq_slave_of != none
+          and rabbitmq_slave_of | d("") | length > 0)
 
 - name: "[RabbitMQ] Define cluster config for master"
   set_fact:
