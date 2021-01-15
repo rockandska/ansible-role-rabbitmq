@@ -7,8 +7,6 @@
       or (rabbitmq_bindings_to_create | length > 0)
       or (rabbitmq_exchanges_to_delete | length > 0)
       or (rabbitmq_exchanges_to_create | length > 0)
-      or (rabbitmq_policies_to_delete | length > 0)
-      or (rabbitmq_policies_to_create | length > 0)
       or (rabbitmq_queues_to_delete | length > 0)
       or (rabbitmq_queues_to_create | length > 0)
 
