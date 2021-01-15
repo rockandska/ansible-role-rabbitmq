@@ -54,6 +54,12 @@ rabbitmq_plugins_to_disable: []
 rabbitmq_users_to_create: []
 rabbitmq_users_to_delete: []
 
+#####################
+# Global Parameters #
+#####################
+rabbitmq_global_parameters_to_create: []
+rabbitmq_global_parameters_to_delete: []
+
 ############
 # Api user #
 ############

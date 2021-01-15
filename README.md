@@ -91,6 +91,12 @@ rabbitmq_plugins_to_disable: []
 rabbitmq_users_to_create: []
 rabbitmq_users_to_delete: []
 
+#####################
+# Global Parameters #
+#####################
+rabbitmq_global_parameters_to_create: []
+rabbitmq_global_parameters_to_delete: []
+
 ############
 # Api user #
 ############
@@ -405,6 +411,35 @@ rabbitmq_hide_log: true
     ```yaml
     rabbitmq_users_to_delete:
       - guest
+    ```
+
+- `rabbitmq_global_parameters_to_create`
+
+  - list of global parameters to create
+
+  - refer to [ansible doc](https://docs.ansible.com/ansible/latest/modules/rabbitmq_global_parameter_module.html) for
+
+  - refer to [this ansible bug report](https://github.com/ansible/ansible/issues/43027) for possible json formatting i
+
+  - example:
+
+    ```yaml
+     rabbitmq_global_parameters_to_create:
+       - name: cluster_name
+         value: "{{ 'mq-cluster' | to_json }}"
+    ```
+
+- `rabbitmq_global_parameters_to_delete`
+
+  - list of global parameters to delete
+
+  - refer to [ansible doc](https://docs.ansible.com/ansible/latest/modules/rabbitmq_global_parameter_module.html) for
+
+  - example:
+
+    ```yaml
+    rabbitmq_global_parameters_to_delete:
+      - name: cluster_name
     ```
 
 - `rabbitmq_management_user`
