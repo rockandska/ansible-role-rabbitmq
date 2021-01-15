@@ -32,6 +32,8 @@
     - rabbitmq_plugins_to_disable
     - rabbitmq_users_to_create
     - rabbitmq_users_to_delete
+    - rabbitmq_global_parameters_to_create
+    - rabbitmq_global_parameters_to_delete
     - rabbitmq_management_user
     - rabbitmq_management_password
     - rabbitmq_management_host

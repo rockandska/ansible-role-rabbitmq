@@ -48,6 +48,8 @@
 
 - import_tasks: config_users.yml
 
+- import_tasks: config_global_parameters.yml
+
 - import_tasks: config_queues.yml
 
 - import_tasks: config_exchanges.yml

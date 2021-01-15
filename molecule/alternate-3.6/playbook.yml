@@ -73,6 +73,11 @@
         destination: queue_test
         destination_type: queue
         vhost: vhost_test
+    rabbitmq_global_parameters_to_create:
+      - name: cluster_name
+        value: "{{ 'mq-cluster' | to_json }}"
+    rabbitmq_global_parameters_to_delete:
+      - name: cluster_name_not_exist
     rabbitmq_policies_to_create:
       - name: HA
         vhost: vhost_test
