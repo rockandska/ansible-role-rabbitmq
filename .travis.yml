@@ -20,13 +20,13 @@ jobs:
         - pip install tox-travis
       script: tox
       env:
-        - ANSIBLE=2.5
-    - <<: *test-tox
-      env:
-        - ANSIBLE=2.6
-    - <<: *test-tox
-      env:
         - ANSIBLE=2.7
+    - <<: *test-tox
+      env:
+        - ANSIBLE=2.8
+    - <<: *test-tox
+      env:
+        - ANSIBLE=2.9
     - stage: mkrelease
       install:
         - pip install ansible
