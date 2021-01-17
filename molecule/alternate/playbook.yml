@@ -3,9 +3,15 @@
   remote_user: molecule
   become: true
   any_errors_fatal: true
+  pre_tasks:
+    - import_tasks: pre_tasks.yml
   roles:
-    - ansible-role-erlang
-    - ansible-role-rabbitmq
+    - role: ansible-role-erlang
+      vars:
+        erlang_series: "{{ lookup('ENV','ERLANG_SERIES') }}"
+    - role: ansible-role-rabbitmq
+      vars:
+        rabbitmq_series: "{{ lookup('ENV','RABBITMQ_SERIES') }}"
   vars:
     rabbitmq_sysctl_config:
       listeners:

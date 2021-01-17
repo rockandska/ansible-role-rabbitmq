@@ -1,32 +1,31 @@
 ---
 language: python
 python:
-  - "2.7"
+  - "3.6"
 cache: pip
 services:
   - docker
+env:
+  - TOX_ENV=py3-ansible27-rabbitmq36
+  - TOX_ENV=py3-ansible27-rabbitmq37
+  - TOX_ENV=py3-ansible28-rabbitmq36
+  - TOX_ENV=py3-ansible28-rabbitmq37
+  - TOX_ENV=py3-ansible29-rabbitmq36
+  - TOX_ENV=py3-ansible29-rabbitmq37
+install:
+  - pip install tox
+script: tox -e "${TOX_ENV}"
+
 stages:
-  - name: tests
+  - name: test
   - name: mkrelease
     if: |
       branch = master \
       AND type != pull_request
+
 jobs:
   fast_finish: true
   include:
-    - &test-tox
-      stage: tests
-      install:
-        - pip install tox-travis
-      script: tox
-      env:
-        - ANSIBLE=2.7
-    - <<: *test-tox
-      env:
-        - ANSIBLE=2.8
-    - <<: *test-tox
-      env:
-        - ANSIBLE=2.9
     - stage: mkrelease
       install:
         - pip install ansible
