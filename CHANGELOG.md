@@ -1,5 +1,11 @@
 # Change Log
 
+## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
+
+**Merged pull requests:**
+
+- Fix/tests newrabbitmq [\#17](https://github.com/rockandska/ansible-role-rabbitmq/pull/17) ([rockandska](https://github.com/rockandska))
+
 ## [0.0.7](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.7) (2020-03-30)
 **Closed issues:**
 
