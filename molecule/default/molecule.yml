@@ -47,6 +47,9 @@ provisioner:
   name: ansible
   lint:
     name: ansible-lint
+    options:
+      exclude:
+        - ../ansible-role-erlang
   playbooks:
     create: create.yml
     converge: playbook.yml

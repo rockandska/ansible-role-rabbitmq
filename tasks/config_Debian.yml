@@ -14,6 +14,7 @@
     src: "{{ rabbitmq_deb_repo_tpl }}"
     dest: "/etc/apt/sources.list.d/{{ rabbitmq_deb_repo_tpl | basename | regex_replace('\\.j2$', '') }}"
     force: true
+    mode: 0644
     backup: true
 
 - name: "[RabbitMQ] Add RabbitMQ repository pinning preferences [Debian/Ubuntu]"
@@ -21,6 +22,7 @@
     src: "{{ rabbitmq_deb_pinning_tpl }}"
     dest: "/etc/apt/preferences.d/{{ rabbitmq_deb_pinning_tpl | basename | regex_replace('\\.j2$', '') }}"
     force: true
+    mode: 0644
     backup: true
 
 - name: "[RabbitMQ] Update cache"

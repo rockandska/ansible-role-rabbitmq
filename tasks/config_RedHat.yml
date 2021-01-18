@@ -4,6 +4,7 @@
     src: "{{ rabbitmq_rpm_repo_tpl }}"
     dest: "/etc/yum.repos.d/{{ rabbitmq_rpm_repo_tpl | basename | regex_replace('\\.j2$', '') }}"
     force: true
+    mode: 0644
     backup: true
 
 - name: "[RabbitMQ] Install RabbitMQ [RHEL/CentOS]"

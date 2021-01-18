@@ -10,15 +10,37 @@ Available on [Ansible Galaxy](https://galaxy.ansible.com/rockandska/rabbitmq)
 **Travis Build :**  
 [![Build Status](https://travis-ci.com/rockandska/ansible-role-rabbitmq.png?branch=master)](https://travis-ci.com/rockandska/ansible-role-rabbitmq) 
 
+Compatibility
+------------
+
+| **RabbitMQ**     |            |
+| ---------------- | ---------- |
+| 3.6.x            | OK         |
+| 3.7.x            | OK         |
+| > 3.7            | Not tested |
+| **Erlang**       |            |
+| 20.x             | OK         |
+| 21.X             | OK         |
+| 22.X             | KO[1]      |
+| **Distribution** |            |
+| CentOS 7         | OK         |
+| CentOS > 7       | Not tested |
+| Debian 9         | OK         |
+| Debian > 9       | Not tested |
+| Ubuntu bionic    | OK         |
+| Ubuntu > bionic  | Not tested |
+
+1. rabbitmq_peer_discovery_classic mode KO, cluster nodes should be added manually
+
 Requirements on remote hosts
 ------------
 
 #### All distro
 
-- [ansible-role-erlang](https://galaxy.ansible.com/rockandska/erlang) applied
+- [ansible-role-erlang](https://galaxy.ansible.com/rockandska/erlang) applied (**don't forget to use an erlang serie compatible with the rabbitmq version who will be installed. See [rabbitmq documentation](https://www.rabbitmq.com/which-erlang.html)**)
 - socat
 - logrotate
-- python requests >= 1.0.0 ( if using bindings , exchanges, queues management provide by this role )
+- python requests >= 1.0.0 ( if using bindings , exchanges, queues management provided by this role )
 - For a cluster, hosts part of the cluster should be resolvable by their hostnames
 
 #### Debian / Ubuntu
@@ -369,9 +391,8 @@ rabbitmq_hide_log: true
 - `rabbitmq_peer_discovery_classic`
 
   - default: true
-  - whether if cluster the nodes should be using classical discovery or not if you want to use another discovery type
-  - the cluster configuration will be automatically generated and add to config file based on inventory name if using classic discovery
-
+  - the cluster configuration will be automatically generated and added to the configuration file based on inventory names (depends on `rabbitmq_is_master` , `rabbitmq_slave_of` role variable.)
+  
 - `rabbitmq_cluster_node_type`
 
   - default: disc

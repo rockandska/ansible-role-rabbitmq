@@ -1,4 +1,4 @@
 ---
 - src: rockandska.erlang
   name: ansible-role-erlang
-  version: 0.0.2
+  version: 0.1.0
