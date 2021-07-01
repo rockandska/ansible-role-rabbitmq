@@ -4,6 +4,7 @@ ignore: |
   .travis/
   .travis.yml
   meta/
+  tmp/
 
 rules:
   braces:

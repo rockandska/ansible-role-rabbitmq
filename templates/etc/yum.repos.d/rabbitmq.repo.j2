@@ -1,7 +1,13 @@
 [rabbitmq]
 name=rabbitmq
-baseurl={{ rabbitmq_rpm_repo_url }}/v{{ rabbitmq_series }}.x/el/{{ ansible_distribution_major_version }}
-repo_gpgcheck=0
-gpgcheck=1
+baseurl={{ rabbitmq_rpm_repo_url }}/{{ ansible_distribution_major_version }}/noarch
+repo_gpgcheck=1
 enabled=1
 gpgkey={{ rabbitmq_rpm_gpg_url }}
+gpgcheck=1
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+pkg_gpgcheck=1
+autorefresh=1
+type=rpm-md

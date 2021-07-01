@@ -9,7 +9,7 @@
 
 - name: "[RabbitMQ] Install RabbitMQ [RHEL/CentOS]"
   yum:
-    name: "rabbitmq-server{{ rabbitmq_series_rpm_version | ternary ('-' + (rabbitmq_series_rpm_version | string),'') }}"
+    name: "rabbitmq-server{{ rabbitmq_series_rpm_version | ternary ('-' + (rabbitmq_series_rpm_version | string),'-' + (rabbitmq_series | string) + '*') }}"
     state: present
     disablerepo: "{{ rabbitmq_rpm_disable_repo | d(omit, true) }}"
     enablerepo: "{{ rabbitmq_rpm_enable_repo | d(omit, true) }}"
