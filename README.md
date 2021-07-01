@@ -15,13 +15,10 @@ Compatibility
 
 | **RabbitMQ**     |            |
 | ---------------- | ---------- |
-| 3.6.x            | OK         |
-| 3.7.x            | OK         |
-| > 3.7            | Not tested |
-| **Erlang**       |            |
-| 20.x             | OK         |
-| 21.X             | OK         |
-| 22.X             | KO[1]      |
+| 3.6.x            | Deprecated |
+| 3.7.x            | Deprecated |
+| 3.8              |     OK[1]     |
+| > 3.8            | Not tested |
 | **Distribution** |            |
 | CentOS 7         | OK         |
 | CentOS > 7       | Not tested |
@@ -61,18 +58,18 @@ Defaults variables are inside `defaults/main.yml`
 ###########
 # Install #
 ###########
-rabbitmq_series: 3.7
+rabbitmq_series: 3.8
 rabbitmq_series_rpm_version:
 rabbitmq_series_deb_version:
 
-rabbitmq_rpm_repo_url: https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server
-rabbitmq_rpm_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+rabbitmq_rpm_repo_url: https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/rpm/el
+rabbitmq_rpm_gpg_url: https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
 rabbitmq_rpm_repo_tpl: etc/yum.repos.d/rabbitmq.repo.j2
 rabbitmq_rpm_disable_repo:
 rabbitmq_rpm_enable_repo:
 
-rabbitmq_deb_repo_url: https://dl.bintray.com/rabbitmq/debian
-rabbitmq_deb_gpg_url: https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc
+rabbitmq_deb_repo_url: https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb
+rabbitmq_deb_gpg_url: https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
 rabbitmq_deb_repo_tpl: etc/apt/sources.list.d/rabbitmq.list.j2
 rabbitmq_deb_pinning_tpl: etc/apt/preferences.d/rabbitmq.j2
 
