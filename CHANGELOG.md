@@ -2,9 +2,15 @@
 
 ## [**Next release**](https://github.com/rockandska/ansible-role-rabbitmq/tree/HEAD)
 
+## [0.1.0](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.1.0) (2020-07-01)
 **Merged pull requests:**
 
 - Fix/tests newrabbitmq [\#17](https://github.com/rockandska/ansible-role-rabbitmq/pull/17) ([rockandska](https://github.com/rockandska))
+- switch to cloudsmitch repositories [\#20](https://github.com/rockandska/ansible-role-rabbitmq/pull/20) ([rockandska](https://github.com/rockandska))
+
+**Deprecated**
+
+RabbitMQ versions < 3.8 are not available anymore and could not be tested
 
 ## [0.0.7](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.0.7) (2020-03-30)
 **Closed issues:**
