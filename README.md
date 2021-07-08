@@ -158,7 +158,7 @@ rabbitmq_hide_log: true
 
 - `rabbitmq_series`
 
-  - should be a float (3.6,3.7 available at 02.01.2019)
+  - should be a float (3.8 available at 07.07.2021)
 
 - `rabbitmq_rpm_repo_url`
 
@@ -181,10 +181,10 @@ rabbitmq_hide_log: true
   - install a specific version of the `rabbitmq_series` for the Centos / Redhat systems
   - example:
     ```
-    3.7.11-1.el7
-    3.7.10-1.el7
-    3.7.9-1.el7
-    3.7.8-1.el7
+    3.8.11-1.el7
+    3.8.10-1.el7
+    3.8.9-1.el7
+    3.8.8-1.el7
     ```
 
 - `rabbitmq_rpm_disable_repo`
@@ -238,10 +238,10 @@ rabbitmq_hide_log: true
   - install a specific version of the `rabbitmq_series` for Debian systems
   - example:
     ```
-    3.7.11-1
-    3.7.10-1
-    3.7.9-1
-    3.7.8-1
+    3.8.11-1
+    3.8.10-1
+    3.8.9-1
+    3.8.8-1
     ```
 
 - `rabbitmq_vars_files`
@@ -670,21 +670,24 @@ Since it is require to have the master node started before getting the slaves jo
 Local Testing
 -------------
 
-The preferred way of locally testing the role is to use Docker and [molecule](https://github.com/metacloud/molecule) (v2.x). You will have to install Docker on your system. See "Get started" for a Docker package suitable to for your system.
-We are using tox to simplify process of testing on multiple ansible versions. To install tox execute:
+#### Requirements
+
+python3 <3.8
+docker
+
+#### Run tests
+
 ```sh
-$ sudo pip install tox
-# or
-$ pip install --user tox
+$ make test
 ```
 
-To run tests on all ansible versions (WARNING: this can take some time)
+After a first run, additional targets for each tox env / molecule scenario should be available
+through auto-completion.
+
+To debug and run a custom molecule command on custom environment with only default test scenario:
 ```sh
-$ tox
-```
-To run a custom molecule command on custom environment with only default test scenario:
-```sh
-$ tox -e py27-ansible25 -- molecule test -s default
+$ source tmp/bin/activate
+$ tox -e py3-ansible27 -- molecule test -s default
 ```
 For more information about molecule go to their [docs](http://molecule.readthedocs.io/en/latest/).
 

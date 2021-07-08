@@ -1,0 +1,15 @@
+name: Tests
+on: [push, pull_request]
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        target: [ test-tox-default-py3-ansible27-rabbitmq38, test-tox-default-py3-ansible28-rabbitmq38, test-tox-default-py3-ansible29-rabbitmq38, test-tox-cluster-py3-ansible27-rabbitmq38, test-tox-cluster-py3-ansible28-rabbitmq38, test-tox-cluster-py3-ansible29-rabbitmq38, test-tox-alternate-py3-ansible27-rabbitmq38, test-tox-alternate-py3-ansible28-rabbitmq38, test-tox-alternate-py3-ansible29-rabbitmq38 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: make ${{matrix.target}}
+        run: make ${{matrix.target}}

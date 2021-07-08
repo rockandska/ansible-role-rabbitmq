@@ -5,6 +5,7 @@ ignore: |
   .travis.yml
   meta/
   tmp/
+  .github/
 
 rules:
   braces:
