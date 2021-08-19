@@ -1,14 +1,14 @@
 ---
 - name: "Display 'RABBITMQ_SERIES' env var"
   debug:
-    var: lookup('ENV','RABBITMQ_SERIES')
+    var: lookup('env','RABBITMQ_SERIES')
   failed_when:
-    - lookup('ENV','RABBITMQ_SERIES') is not defined
-      or (lookup('ENV','RABBITMQ_SERIES') | string | length == 0)
+    - lookup('env','RABBITMQ_SERIES') is not defined
+      or (lookup('env','RABBITMQ_SERIES') | string | length == 0)
 
 - name: "Display 'ERLANG_SERIES' env var"
   debug:
-    var: lookup('ENV','ERLANG_SERIES')
+    var: lookup('env','ERLANG_SERIES')
   failed_when:
-    - lookup('ENV','ERLANG_SERIES') is not defined
-      or (lookup('ENV','ERLANG_SERIES') | string | length == 0)
+    - lookup('env','ERLANG_SERIES') is not defined
+      or (lookup('env','ERLANG_SERIES') | string | length == 0)

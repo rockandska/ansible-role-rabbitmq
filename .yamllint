@@ -1,0 +1,9 @@
+---
+extends: default
+ignore: |
+  .github/
+  .tox/
+  tmp/
+
+rules:
+  line-length: disable

@@ -5,10 +5,10 @@ dependency:
     role-file: molecule/resources/requirements.yml
 driver:
   name: docker
-lint:
-  name: yamllint
-  options:
-    config-file: molecule/resources/yaml-lint.yml
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
 platforms:
   - name: ansible-role-rabbitmq-ubuntu-bionic
     image: ubuntu:bionic
@@ -45,11 +45,6 @@ platforms:
       - SYS_ADMIN
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-    options:
-      exclude:
-        - ../ansible-role-erlang
   playbooks:
     create: create.yml
     converge: playbook.yml

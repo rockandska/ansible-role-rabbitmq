@@ -30,19 +30,20 @@
 
 - import_tasks: config_systemd.yml
 
-- import_tasks: config_plugins.yml
-
 - import_tasks: config_server.yml
 
 - import_tasks: config_cookie.yml
 
-- meta: flush_handlers
+- name: "Flush handlers"
+  meta: flush_handlers
 
 - name: "[RabbitMQ] Ensure rabbitmq is started and enabled"
   systemd:
     name: "rabbitmq-server.service"
     state: "started"
     enabled: "true"
+
+- import_tasks: config_plugins.yml
 
 - import_tasks: config_vhosts.yml
 

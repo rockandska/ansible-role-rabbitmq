@@ -8,10 +8,10 @@
   roles:
     - role: ansible-role-erlang
       vars:
-        erlang_series: "{{ lookup('ENV','ERLANG_SERIES') }}"
+        erlang_series: "{{ lookup('env','ERLANG_SERIES') }}"
     - role: ansible-role-rabbitmq
       vars:
-        rabbitmq_series: "{{ lookup('ENV','RABBITMQ_SERIES') }}"
+        rabbitmq_series: "{{ lookup('env','RABBITMQ_SERIES') }}"
   vars:
     rabbitmq_sysctl_config:
       listeners:
