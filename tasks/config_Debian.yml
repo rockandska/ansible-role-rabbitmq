@@ -35,3 +35,10 @@
     package:
       - rabbitmq-server
     state: present
+
+- name: "Add rabbitmq user to ssl-cert"
+  user:
+    name: rabbitmq
+    groups: ssl-cert
+    append: true
+  become: true

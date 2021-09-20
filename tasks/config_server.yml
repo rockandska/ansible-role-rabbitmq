@@ -100,3 +100,50 @@
     - rabbitmq_erlang_config | d("") | trim | length == 0
       or rabbitmq_erlang_config == None
     - __rabbitmq_cluster_nodes | d("") | trim | length == 0
+
+- name: "[RabbitMQ] Copy custom server config for ssl internode communication (erlang format)"
+  copy:
+    content: "{{ rabbitmq_internode_ssl }}"
+    dest: "/etc/rabbitmq/inter_node_tls.config"
+    force: true
+    mode: 0644
+    owner: root
+  notify:
+    - restart rabbitmq
+  when:
+    - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
+      or __rabbitmq_cluster_nodes | d("") | trim | length != 0
+
+- name: Retrieve erl_ssl_path
+  command: erl -noinput -eval 'io:format("ERL_SSL_PATH=~s~n", [filename:dirname(code:which(inet_tls_dist))])' -s init stop
+  register: erl_ssl_path
+  when:
+    - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
+      or __rabbitmq_cluster_nodes | d("") | trim | length != 0
+
+- name: Write rabbitmq env conf
+  copy:
+    content: |
+      # NOTE: the following path is system dependent and will change between Erlang
+      #       versions
+      {{ erl_ssl_path.stdout }}
+
+      # -pa $ERL_SSL_PATH prepends the directory ERL_SSL_PATH points at to the code path
+      # -proto_dist inet_tls tells the runtime to encrypt inter-node communication
+      # -ssl_dist_optfile tells the runtime where to find its inter-node TLS configuration file
+      SERVER_ADDITIONAL_ERL_ARGS="-pa $ERL_SSL_PATH
+        -proto_dist inet_tls
+        -ssl_dist_optfile /etc/rabbitmq/inter_node_tls.config"
+
+      RABBITMQ_CTL_ERL_ARGS="-pa $ERL_SSL_PATH
+        -proto_dist inet_tls
+        -ssl_dist_optfile /etc/rabbitmq/inter_node_tls.config"
+    dest: "/etc/rabbitmq/rabbitmq-env.conf"
+    force: true
+    mode: 0644
+    owner: root
+  notify:
+    - restart rabbitmq
+  when:
+    - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
+      or __rabbitmq_cluster_nodes | d("") | trim | length != 0

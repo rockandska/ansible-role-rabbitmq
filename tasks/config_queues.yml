@@ -17,6 +17,8 @@
     name: "{{ item.name | default(omit) }}"
     vhost: "{{ item.vhost | default(omit) }}"
     state: present
+    ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
+    login_protocol: "{{ 'https' if rabbitmq_management_ssl | bool else 'http' }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_queues_to_create }}"
@@ -33,6 +35,8 @@
     name: "{{ item.name | default(omit) }}"
     vhost: "{{ item.vhost | default(omit) }}"
     state: absent
+    ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
+    login_protocol: "{{ 'https' if rabbitmq_management_ssl | bool else 'http' }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_queues_to_delete }}"

@@ -1,14 +1,14 @@
 ansible-role-rabbitmq
 =========
 
-Ansible role to install RabbitMQ from RabbitMQ repository.  
+Ansible role to install RabbitMQ from RabbitMQ repository.
 Available on [Ansible Galaxy](https://galaxy.ansible.com/rockandska/rabbitmq)
 
-**Ansible Galaxy :**    
-![Galaxy Score](https://img.shields.io/ansible/quality/38029.svg)  
+**Ansible Galaxy :**
+![Galaxy Score](https://img.shields.io/ansible/quality/38029.svg)
 
-**Travis Build :**  
-[![Build Status](https://travis-ci.com/rockandska/ansible-role-rabbitmq.png?branch=master)](https://travis-ci.com/rockandska/ansible-role-rabbitmq) 
+**Travis Build :**
+[![Build Status](https://travis-ci.com/rockandska/ansible-role-rabbitmq.png?branch=master)](https://travis-ci.com/rockandska/ansible-role-rabbitmq)
 
 Compatibility
 ------------
@@ -89,6 +89,22 @@ rabbitmq_systemd_override: {}
 
 rabbitmq_custom_logrotate_tpl: etc/logrotate.d/rabbitmq-server.j2
 rabbitmq_custom_logrotate:
+
+rabbitmq_internode_ssl: |
+  [
+    {server, [
+      {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
+      {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
+      {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
+      {secure_renegotiate, true}
+    ]},
+    {client, [
+      {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
+      {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
+      {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
+      {secure_renegotiate, true}
+    ]}
+  ].
 
 ###########
 # Cluster #
@@ -311,7 +327,7 @@ rabbitmq_hide_log: true
 - `rabbitmq_systemd_override`
   - a dict representing the systemd override config
   - the first level is used for the ini section
-  - the second level is used for the key / value 
+  - the second level is used for the key / value
   - example:
     ```yaml
     rabbitmq_systemd_override:
@@ -389,7 +405,7 @@ rabbitmq_hide_log: true
 
   - default: true
   - the cluster configuration will be automatically generated and added to the configuration file based on inventory names (depends on `rabbitmq_is_master` , `rabbitmq_slave_of` role variable.)
-  
+
 - `rabbitmq_cluster_node_type`
 
   - default: disc
@@ -606,11 +622,11 @@ rabbitmq_hide_log: true
 
     ```yaml
      rabbitmq_policies_to_create:
-       - name: HA                                                       
+       - name: HA
          vhost: vhost_test
          pattern: .*
          tags:
-           ha-mode: all                                                           
+           ha-mode: all
     ```
 
 - `rabbitmq_policies_to_delete`
