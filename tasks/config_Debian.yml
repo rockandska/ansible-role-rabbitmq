@@ -34,7 +34,9 @@
   apt:
     package:
       - rabbitmq-server
+      - ssl-cert
     state: present
+    install_recommends: no
 
 - name: "Add rabbitmq user to ssl-cert"
   user:
