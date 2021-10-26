@@ -28,6 +28,9 @@ rabbitmq_sysctl_config: {}
 rabbitmq_erlang_tpl: etc/rabbitmq/erlang.config.j2
 rabbitmq_erlang_config:
 
+rabbitmq_env_tpl: etc/rabbitmq/rabbitmq-env.conf.j2
+rabbitmq_env_config: {}
+
 rabbitmq_systemd_override_tpl: etc/systemd/system/rabbitmq-server.service.d/override.conf.j2
 rabbitmq_systemd_override: {}
 

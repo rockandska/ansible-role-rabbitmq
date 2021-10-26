@@ -84,6 +84,9 @@ rabbitmq_sysctl_config: {}
 rabbitmq_erlang_tpl: etc/rabbitmq/erlang.config.j2
 rabbitmq_erlang_config:
 
+rabbitmq_env_tpl: etc/rabbitmq/rabbitmq-env.conf.j2
+rabbitmq_env_config: {}
+
 rabbitmq_systemd_override_tpl: etc/systemd/system/rabbitmq-server.service.d/override.conf.j2
 rabbitmq_systemd_override: {}
 
@@ -317,6 +320,26 @@ rabbitmq_hide_log: true
       ]
     }
   ```
+
+- `rabbitmq_env_tpl`
+  - path to the rabbitmq env config template
+  - if you want to use your own template
+    - add your template next to your playbook in a `templates` directory
+    - use a different path than the default one
+  - some env vars are set automatically if SSL internodes is activated
+    - ERL_SSL_PATH
+    - SERVER_ADDITIONAL_ERL_ARGS
+    - RABBITMQ_CTL_ERL_ARGS
+
+- `rabbitmq_env_config`:
+  - a dict representing the env config
+  - the key should be the name of the environment variable
+  - the value should be the content of the var
+  - example:
+    ```yaml
+    rabbitmq_env_config:
+      NODENAME: "bunny@myhost"
+    ```
 
 - `rabbitmq_systemd_override_tpl`
   - path to the rabbitmq systemd override template

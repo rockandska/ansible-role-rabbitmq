@@ -47,6 +47,8 @@
     - rabbitmq_policies_to_create
     - rabbitmq_policies_to_delete
     - rabbitmq_hide_log
+    - rabbitmq_env_tpl
+    - rabbitmq_env_config
 
 - name: "[RabbitMQ] Test that variables are not empty"
   assert:
