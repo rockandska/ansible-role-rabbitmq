@@ -112,14 +112,14 @@
     - restart rabbitmq
   when:
     - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
-      or __rabbitmq_cluster_nodes | d("") | trim | length != 0
+      and __rabbitmq_cluster_nodes | d("") | trim | length != 0
 
 - name: Retrieve erl_ssl_path
   command: erl -noinput -eval 'io:format("ERL_SSL_PATH=~s~n", [filename:dirname(code:which(inet_tls_dist))])' -s init stop
   register: erl_ssl_path
   when:
     - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
-      or __rabbitmq_cluster_nodes | d("") | trim | length != 0
+      and __rabbitmq_cluster_nodes | d("") | trim | length != 0
 
 - name: Write rabbitmq env conf
   copy:
@@ -146,4 +146,4 @@
     - restart rabbitmq
   when:
     - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
-      or __rabbitmq_cluster_nodes | d("") | trim | length != 0
+      and __rabbitmq_cluster_nodes | d("") | trim | length != 0
