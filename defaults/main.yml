@@ -64,6 +64,7 @@ rabbitmq_management_user:
 rabbitmq_management_password:
 rabbitmq_management_host:
 rabbitmq_management_port:
+rabbitmq_management_protocol:
 
 ##########
 # Vhosts #

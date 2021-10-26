@@ -49,6 +49,7 @@
     - rabbitmq_hide_log
     - rabbitmq_env_tpl
     - rabbitmq_env_config
+    - rabbitmq_management_protocol
 
 - name: "[RabbitMQ] Test that variables are not empty"
   assert:

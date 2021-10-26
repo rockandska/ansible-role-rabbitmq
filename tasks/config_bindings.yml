@@ -11,9 +11,9 @@
     login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
     login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
     login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    login_protocol: "{{ rabbitmq_management_protocol | default(omit,true) }}"
     state: present
     ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
-    login_protocol: "{{ 'https' if rabbitmq_management_ssl | bool else 'http' }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_bindings_to_create }}"
@@ -31,9 +31,9 @@
     login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
     login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
     login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    login_protocol: "{{ rabbitmq_management_protocol | default(omit,true) }}"
     state: absent
     ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
-    login_protocol: "{{ 'https' if rabbitmq_management_ssl | bool else 'http' }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_bindings_to_delete }}"

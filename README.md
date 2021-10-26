@@ -136,6 +136,7 @@ rabbitmq_management_user:
 rabbitmq_management_password:
 rabbitmq_management_host:
 rabbitmq_management_port:
+rabbitmq_management_protocol:
 
 ##########
 # Vhosts #
@@ -498,6 +499,16 @@ rabbitmq_hide_log: true
 - `rabbitmq_management_port`
 
   - default: 15672
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_protocol`
+
+  - default: http
   - Used if one or more of those configurations are set:
     - `rabbitmq_exchanges_to_create`
     - `rabbitmq_exchanges_to_delete`
