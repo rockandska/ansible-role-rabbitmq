@@ -36,11 +36,10 @@
       - rabbitmq-server
       - ssl-cert
     state: present
-    install_recommends: no
+    install_recommends: false
 
 - name: "Add rabbitmq user to ssl-cert"
   user:
     name: rabbitmq
     groups: ssl-cert
     append: true
-  become: true
