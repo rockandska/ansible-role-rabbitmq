@@ -87,6 +87,8 @@ rabbitmq_erlang_config:
 rabbitmq_env_tpl: etc/rabbitmq/rabbitmq-env.conf.j2
 rabbitmq_env_config: {}
 
+rabbitmq_node_name:
+
 rabbitmq_systemd_override_tpl: etc/systemd/system/rabbitmq-server.service.d/override.conf.j2
 rabbitmq_systemd_override: {}
 
@@ -340,6 +342,14 @@ rabbitmq_hide_log: true
     ```yaml
     rabbitmq_env_config:
       NODENAME: "bunny@myhost"
+    ```
+
+- `rabbitmq_node_name`:
+  - a string representing the node name to use
+  - use it if you change nodename through rabbitmq_env_config
+  - example:
+    ```yaml
+    rabbitmq_node_name: "bunny@myhost"
     ```
 
 - `rabbitmq_systemd_override_tpl`

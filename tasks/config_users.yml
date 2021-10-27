@@ -10,6 +10,7 @@
     permissions: "{{ item.permissions | default(omit) }}"
     tags: "{{ item.tags | default(omit) }}"
     update_password: "{{ item.update_password | default(omit) }}"
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_users_to_create }}"
@@ -21,6 +22,7 @@
   rabbitmq_user:
     user: "{{ item }}"
     state: absent
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
   with_items:
     - "{{ rabbitmq_users_to_delete }}"
   when:

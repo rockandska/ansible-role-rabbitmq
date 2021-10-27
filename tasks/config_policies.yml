@@ -3,7 +3,7 @@
   rabbitmq_policy:
     apply_to: "{{ item.apply_to | default(omit) }}"
     name: "{{ item.name | default(omit) }}"
-    node: "{{ item.node | default(omit) }}"
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
     pattern: "{{ item.pattern | default(omit) }}"
     priority: "{{ item.priority | default(omit) }}"
     tags: "{{ item.tags | default(omit) }}"
