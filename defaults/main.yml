@@ -47,6 +47,8 @@ rabbitmq_slave_of:
 rabbitmq_peer_discovery_classic: true
 rabbitmq_cluster_node_type: disc
 
+rabbitmq_internode_ssl_config:
+
 ###########
 # Plugins #
 ###########

@@ -95,22 +95,6 @@ rabbitmq_systemd_override: {}
 rabbitmq_custom_logrotate_tpl: etc/logrotate.d/rabbitmq-server.j2
 rabbitmq_custom_logrotate:
 
-rabbitmq_internode_ssl: |
-  [
-    {server, [
-      {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
-      {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
-      {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
-      {secure_renegotiate, true}
-    ]},
-    {client, [
-      {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
-      {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
-      {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
-      {secure_renegotiate, true}
-    ]}
-  ].
-
 ###########
 # Cluster #
 ###########
@@ -118,6 +102,7 @@ rabbitmq_is_master:
 rabbitmq_slave_of:
 rabbitmq_peer_discovery_classic: true
 rabbitmq_cluster_node_type: disc
+rabbitmq_internode_ssl_config:
 
 ###########
 # Plugins #
@@ -444,6 +429,29 @@ rabbitmq_hide_log: true
 
   - default: disc
   - whether the node is of type `disc` or `ram`
+
+- `rabbitmq_internode_ssl_config`
+  - used to write dedicated internode configuration (see [RabbitMQ Documentation](https://www.rabbitmq.com/clustering-ssl.html#linux-strategy-two))
+  - if set, the part who need to be added to `/etc/rabbitmq/rabbitmq-env.conf`
+      will be done automatically.
+  - Example:
+    ```yaml
+    rabbitmq_internode_ssl_config: |
+      [
+        {server, [
+          {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
+          {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
+          {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
+          {secure_renegotiate, true}
+        ]},
+        {client, [
+          {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
+          {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
+          {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
+          {secure_renegotiate, true}
+        ]}
+      ].
+    ```
 
 - `rabbitmq_users_to_create`
 

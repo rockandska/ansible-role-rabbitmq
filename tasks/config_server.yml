@@ -103,7 +103,7 @@
 
 - name: "[RabbitMQ] Copy custom server config for ssl internode communication (erlang format)"
   copy:
-    content: "{{ rabbitmq_internode_ssl }}"
+    content: "{{ rabbitmq_internode_ssl_config }}"
     dest: "/etc/rabbitmq/inter_node_tls.config"
     force: true
     mode: 0644
@@ -111,14 +111,14 @@
   notify:
     - restart rabbitmq
   when:
-    - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
+    - (rabbitmq_internode_ssl_config | d("") | trim | length > 0 and rabbitmq_internode_ssl_config != None)
       and __rabbitmq_cluster_nodes | d("") | trim | length != 0
 
 - name: Retrieve erl_ssl_path
   command: erl -noinput -eval 'io:format("ERL_SSL_PATH=~s~n", [filename:dirname(code:which(inet_tls_dist))])' -s init stop
   register: _erl_ssl_path
   when:
-    - (rabbitmq_internode_ssl | d("") | trim | length > 0 and rabbitmq_internode_ssl != None)
+    - (rabbitmq_internode_ssl_config | d("") | trim | length > 0 and rabbitmq_internode_ssl_config != None)
       and __rabbitmq_cluster_nodes | d("") | trim | length != 0
 
 - name: Write rabbitmq env conf
