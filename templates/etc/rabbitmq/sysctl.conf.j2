@@ -1,4 +1,12 @@
-#jinja2: trim_blocks: "true", lstrip_blocks: "false"
+#jinja2: trim_blocks: True, lstrip_blocks: True
+{%- if rabbitmq_series is version('3.7', '>=') -%}
+{%- if __rabbitmq_cluster_nodes | d("") | length > 0 and rabbitmq_peer_discovery_classic -%}
+cluster_formation.peer_discovery_backend = classic_config
+{% for node in __rabbitmq_cluster_nodes %}
+cluster_formation.classic_config.nodes.{{ loop.index }} = {{ node }}
+{% endfor %}
+{%- endif -%}
+{%- endif -%}
 {%- macro treedot(dict,string) -%}
   {%- for key, value in dict.items() -%}
     {%- if value is mapping -%}

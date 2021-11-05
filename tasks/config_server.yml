@@ -27,32 +27,43 @@
       or rabbitmq_slave_of != none
       or rabbitmq_slave_of | d("") | length > 0
 
-- name: "[RabbitMQ] Define cluster config for master"
+- name: "[RabbitMQ] Define cluster nodes"
+  delegate_to: localhost
   set_fact:
-    __rabbitmq_cluster_nodes: >-
-      'rabbit@{{ ansible_hostname }}',
-      'rabbit@{{ groups['all']
-                    | map('extract',hostvars)
-                    | selectattr('rabbitmq_slave_of','defined')
-                    | selectattr('rabbitmq_slave_of', 'equalto', inventory_hostname)
-                    | map(attribute='ansible_hostname') | join("','rabbit@")
-              }}'
+    __rabbitmq_cluster_nodes: |
+      {{
+        ( __rabbitmq_cluster_nodes
+          | default([],True)
+        )
+        + [
+            node if '@' in node else ([ node, hostvars[item]['ansible_hostname'] ] | join('@'))
+        ]
+      }}
+  loop:
+    "{{
+      (
+        (
+          groups['all']
+            | map('extract',hostvars)
+            | selectattr('rabbitmq_slave_of','defined')
+            | selectattr('rabbitmq_slave_of','equalto',(rabbitmq_slave_of | d(inventory_hostname, true)))
+            | map(attribute='inventory_hostname')
+            | list
+        )
+        +
+        [ rabbitmq_slave_of | ternary(rabbitmq_slave_of,inventory_hostname) ]
+      ) | unique
+    }}"
+  loop_control:
+    index_var: id
+  vars:
+    node: "{{ hostvars[item]['rabbitmq_node_name'] | d('rabbit',True) }}"
   when:
     - rabbitmq_is_master
-
-- name: "[RabbitMQ] Define cluster config for slave"
-  set_fact:
-    __rabbitmq_cluster_nodes: >-
-      'rabbit@{{ hostvars[rabbitmq_slave_of].ansible_hostname }}',
-      'rabbit@{{ groups['all']
-                    | map('extract',hostvars)
-                    | selectattr('rabbitmq_slave_of','defined')
-                    | selectattr('rabbitmq_slave_of', 'equalto', rabbitmq_slave_of)
-                    | map(attribute='ansible_hostname') | join("','rabbit@")
-              }}'
-  when:
-    - rabbitmq_slave_of != none
-    - rabbitmq_slave_of | d("") | length > 0
+      or (
+        rabbitmq_slave_of != none
+        and rabbitmq_slave_of | d("") | length > 0
+      )
 
 - name: "[RabbitMQ] Copy custom server config (sysctl format)"
   template:
@@ -76,6 +87,7 @@
   when:
     - rabbitmq_sysctl_config | length == 0
     - rabbitmq_series is version('3.7', '>=')
+    - __rabbitmq_cluster_nodes | d("", True) | length == 0
 
 - name: "[RabbitMQ] Copy custom server config (erlang format)"
   template:

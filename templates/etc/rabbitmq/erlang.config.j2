@@ -5,12 +5,14 @@
   {{ line }}
 {% endfor %}
 {% endif %}
+{% if rabbitmq_series is version('3.7', '<') %}
 {% if __rabbitmq_cluster_nodes | d("") | length > 0 and rabbitmq_peer_discovery_classic %}
   {% if rabbitmq_erlang_config != None and rabbitmq_erlang_config | d("") | length > 0 %}
   ,
   {% endif %}
   {rabbit, [
-  {cluster_nodes, {[{{ __rabbitmq_cluster_nodes }}], {{ rabbitmq_cluster_node_type }} }}
+  {cluster_nodes, { {{ __rabbitmq_cluster_nodes }}, {{ rabbitmq_cluster_node_type }} } }
   ]}
+{% endif %}
 {% endif %}
 ].
