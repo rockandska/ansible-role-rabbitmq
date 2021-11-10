@@ -135,6 +135,28 @@ provisioner:
           - name: HA_not_exist
             vhost: vhost_test
         rabbitmq_hide_log: false
+        rabbitmq_users_groups:
+          - name: rabbitmq
+            groups: users
+            append: true
+        rabbitmq_internode_ssl_config: |
+          [
+            {server, [
+              {cacertfile,   "{{ (ansible_distribution == 'CentOS') | ternary('/etc/pki/tls/certs/ca-bundle.crt','/etc/ssl/certs/ca-certificates.crt') }}" },
+              {certfile,   "/etc/ssl/server.pem"},
+              {keyfile,    "/etc/ssl/server.key"},
+              {secure_renegotiate, true},
+              {verify, verify_peer},
+              {fail_if_no_peer_cert, true}
+            ]},
+            {client, [
+              {cacertfile,   "{{ (ansible_distribution == 'CentOS') | ternary('/etc/pki/tls/certs/ca-bundle.crt','/etc/ssl/certs/ca-certificates.crt') }}" },
+              {certfile,   "/etc/ssl/client.pem"},
+              {keyfile,    "/etc/ssl/client.key"},
+              {secure_renegotiate, true}
+            ]}
+          ].
+
     host_vars:
       ansible-role-rabbitmq-ubuntu-bionic:
         rabbitmq_is_master: true
