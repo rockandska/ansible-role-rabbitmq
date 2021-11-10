@@ -129,6 +129,7 @@
 - name: Retrieve erl_ssl_path
   command: erl -noinput -eval 'io:format("ERL_SSL_PATH=~s~n", [filename:dirname(code:which(inet_tls_dist))])' -s init stop
   register: _erl_ssl_path
+  changed_when: false
   when:
     - (rabbitmq_internode_ssl_config | d("") | trim | length > 0 and rabbitmq_internode_ssl_config != None)
       and __rabbitmq_cluster_nodes | d("") | trim | length != 0
@@ -145,3 +146,11 @@
       or (rabbitmq_env_config | length > 0)
   notify:
     - restart rabbitmq
+
+- name: Change users/groups
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+    append: "{{ item.append | d(omit,true) }}"
+  with_items:
+    - "{{ rabbitmq_users_groups }}"

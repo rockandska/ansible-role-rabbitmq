@@ -51,6 +51,7 @@
     - rabbitmq_env_config
     - rabbitmq_management_protocol
     - rabbitmq_internode_ssl_config
+    - rabbitmq_users_groups
 
 - name: "[RabbitMQ] Test that variables are not empty"
   assert:

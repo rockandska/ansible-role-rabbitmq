@@ -39,6 +39,8 @@ rabbitmq_systemd_override: {}
 rabbitmq_custom_logrotate_tpl: etc/logrotate.d/rabbitmq-server.j2
 rabbitmq_custom_logrotate:
 
+rabbitmq_users_groups: []
+
 ###########
 # Cluster #
 ###########

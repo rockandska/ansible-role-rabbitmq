@@ -95,6 +95,8 @@ rabbitmq_systemd_override: {}
 rabbitmq_custom_logrotate_tpl: etc/logrotate.d/rabbitmq-server.j2
 rabbitmq_custom_logrotate:
 
+rabbitmq_users_groups: []
+
 ###########
 # Cluster #
 ###########
@@ -388,6 +390,21 @@ rabbitmq_hide_log: true
     # }
     ```
 
+- `rabbitmq_users_groups`
+
+  - a list of users and user module arguments (name, groups,append)
+
+  - Used to set/add user to groups after RabbitMQ installation
+
+  - example:
+
+    ```yaml
+    rabbitmq_users_groups:
+      - name: rabbitmq
+        groups: ssl-cert
+        append: true
+    ```
+  
 - `rabbitmq_is_master`
 
   - true / false
