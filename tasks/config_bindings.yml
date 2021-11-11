@@ -13,7 +13,9 @@
     login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
     login_protocol: "{{ rabbitmq_management_protocol | default(omit,true) }}"
     state: present
-    ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
+    ca_cert: "{{ rabbitmq_management_ca_cert | default(omit,true) }}"
+    client_cert: "{{ rabbitmq_management_client_cert | default(omit,true) }}"
+    client_key: "{{ rabbitmq_management_client_key | default(omit,true) }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_bindings_to_create }}"
@@ -33,7 +35,9 @@
     login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
     login_protocol: "{{ rabbitmq_management_protocol | default(omit,true) }}"
     state: absent
-    ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
+    ca_cert: "{{ rabbitmq_management_ca_cert | default(omit,true) }}"
+    client_cert: "{{ rabbitmq_management_client_cert | default(omit,true) }}"
+    client_key: "{{ rabbitmq_management_client_key | default(omit,true) }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_bindings_to_delete }}"

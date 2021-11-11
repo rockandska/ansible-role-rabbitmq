@@ -126,6 +126,9 @@ rabbitmq_management_password:
 rabbitmq_management_host:
 rabbitmq_management_port:
 rabbitmq_management_protocol:
+rabbitmq_management_ca_cert:
+rabbitmq_management_client_cert:
+rabbitmq_management_client_key:
 
 ##########
 # Vhosts #
@@ -544,6 +547,34 @@ rabbitmq_hide_log: true
 - `rabbitmq_management_protocol`
 
   - default: http
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_ca_cert`
+
+  - CA certificate to verify SSL connection to management API
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_client_cert`
+  - Client certificate to send on SSL connections to management API.
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_client_key`
+  - Private key matching the client certificate.
   - Used if one or more of those configurations are set:
     - `rabbitmq_exchanges_to_create`
     - `rabbitmq_exchanges_to_delete`

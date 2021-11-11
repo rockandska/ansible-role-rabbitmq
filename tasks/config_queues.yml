@@ -18,7 +18,9 @@
     name: "{{ item.name | default(omit) }}"
     vhost: "{{ item.vhost | default(omit) }}"
     state: present
-    ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
+    ca_cert: "{{ rabbitmq_management_ca_cert | default(omit,true) }}"
+    client_cert: "{{ rabbitmq_management_client_cert | default(omit,true) }}"
+    client_key: "{{ rabbitmq_management_client_key | default(omit,true) }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_queues_to_create }}"
@@ -36,7 +38,9 @@
     name: "{{ item.name | default(omit) }}"
     vhost: "{{ item.vhost | default(omit) }}"
     state: absent
-    ca_cert: "{{ rabbitmq_ca_certificates | default(omit,true) }}"
+    ca_cert: "{{ rabbitmq_management_ca_cert | default(omit,true) }}"
+    client_cert: "{{ rabbitmq_management_client_cert | default(omit,true) }}"
+    client_key: "{{ rabbitmq_management_client_key | default(omit,true) }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_queues_to_delete }}"
