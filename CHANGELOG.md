@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [0.2.0](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.2.0) (2021-11-21)
+
+### feat
+
+- add full ssl support (#25) ([14ca0c6](https://github.com/rockandska/ansible-role-rabbitmq/commit/14ca0c6d69faee524dd45928844870ac5fc58212))
+- add ssl module args variables for management API ([b8a9560](https://github.com/rockandska/ansible-role-rabbitmq/commit/b8a9560f065e8fb11ed088a78986a8de1b19ff30))
+- add possibility to add rabbimq user to group ([dbe62f6](https://github.com/rockandska/ansible-role-rabbitmq/commit/dbe62f647a808e4e07dbd03d184cccd642515dd0))
+- add possibility to choose node name ([f467d12](https://github.com/rockandska/ansible-role-rabbitmq/commit/f467d1213a53448e3346c0794152fbc39c6079e0))
+- add rabbitmq-env tpl ([99ef497](https://github.com/rockandska/ansible-role-rabbitmq/commit/99ef49778f9eaa2e6ade15c9a262b1ccf7028fca))
+
+### fix
+
+- add discovered inventory nodes to sysctl config ([7ee6752](https://github.com/rockandska/ansible-role-rabbitmq/commit/7ee67528485f1ef9ba176d30b81805d6f00772f8))
+- pinning not respected ([972425f](https://github.com/rockandska/ansible-role-rabbitmq/commit/972425f18118e194f526f4df77b1f4ee0eb3184f))
+- rabbitmq_internode_ssl -> rabbitmq_internode_ssl_config ([6463e56](https://github.com/rockandska/ansible-role-rabbitmq/commit/6463e56e1766472bb07324be171cd8094dd204ff))
+- update README and plugins tasks ([26e14b4](https://github.com/rockandska/ansible-role-rabbitmq/commit/26e14b4639a2c998b9080e75aaa3ba89346914ca))
+- enable plugins online ([652c452](https://github.com/rockandska/ansible-role-rabbitmq/commit/652c452c4a5aca8dda0f0ef1a15dd14e972e43be))
+
 ## [0.1.0](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.1.0) (2020-07-01)
 **Merged pull requests:**
 
