@@ -93,13 +93,13 @@ test: $(TESTS_TARGETS)
 .PHONY: $(TEST_TOX_TARGETS)
 $(TEST_TOX_TARGETS): SCENARIO = $(strip $(foreach s,$(TEST_MOLECULE_SCENARIOS_LIST),$(subst $(TEST_TOX_TARGETS_PREFIX)-$(s)-,$(s),$(findstring $(TEST_TOX_TARGETS_PREFIX)-$(s)-,$(@)))))
 $(TEST_TOX_TARGETS): TOX_ENV = $(strip $(foreach e,$(TEST_TOX_ENV_LIST),$(subst $(TEST_TOX_TARGETS_PREFIX)-$(SCENARIO)-$(e),$(e),$(findstring $(TEST_TOX_TARGETS_PREFIX)-$(SCENARIO)-$(e),$(@)))))
-$(TEST_TOX_TARGETS): venv .github/workflows/test.yml
+$(TEST_TOX_TARGETS): venv .github/workflows/pull_request.yml
 	$(info ### Starting test with '$(TOX_ENV)' tox env and '$(SCENARIO)' molecule scenario)
 	tox -e $(TOX_ENV) -- molecule test -s $(SCENARIO)
 
-.github/workflows/test.yml: tox.ini Makefile
-	$(info ### Updating GHA test workflow ###)
-	docker run --rm -v "${PWD}":/workdir mikefarah/yq:4.9.6 -i eval '.jobs.test.strategy.matrix.target = [ "$(subst $(_SPACE),"$(_SPACE)$(_COMMA)$(_SPACE)",$(strip $(TESTS_TARGETS)))" ]' $@
+.github/workflows/pull_request.yml: tox.ini Makefile
+	$(info ### Updating GHA pull_request workflow ###)
+	docker run --rm -v "${PWD}":/workdir mikefarah/yq:4.9.6 -i eval '.jobs.Tests.strategy.matrix.target = [ "$(subst $(_SPACE),"$(_SPACE)$(_COMMA)$(_SPACE)",$(strip $(TESTS_TARGETS)))" ]' $@
 
 ##############
 # Python env #

@@ -1,10 +1,11 @@
 name: Tests
-on: [push, pull_request]
+on:
+  pull_request:
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  Tests:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
