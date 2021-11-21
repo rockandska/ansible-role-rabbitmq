@@ -1,0 +1,41 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+jobs:
+  Tests:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        target: [test-tox-default-py3-ansible29-rabbitmq38, test-tox-default-py3-ansible210-rabbitmq38, test-tox-cluster-py3-ansible29-rabbitmq38, test-tox-cluster-py3-ansible210-rabbitmq38, test-tox-alternate-py3-ansible29-rabbitmq38, test-tox-alternate-py3-ansible210-rabbitmq38]
+    steps:
+      - uses: actions/checkout@v2
+      - name: make ${{matrix.target}}
+        run: make ${{matrix.target}}
+  Release:
+    needs:
+      - Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure git
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - name: Fetch tags
+        run: git fetch --prune --unshallow --tags
+      - name: Make release
+        shell: 'script -qfec "bash {0}"'
+        run: make release
+      - name: Set ~/.ansible/galaxy_token
+        run: |
+          mkdir ~/.ansible
+          echo "token: ${ANSIBLE_GALAXY_TOKEN}" > ~/.ansible/galaxy_token
+        env:
+          ANSIBLE_GALAXY_TOKEN: "${{ secrets.ANSIBLE_GALAXY_TOKEN }}"
+      - name: Push back CHANGELOG and tag
+        run: git push --follow-tags
+      - name: Publish release
+        run: |
+          make publish

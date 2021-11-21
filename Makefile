@@ -52,6 +52,8 @@ endef
 MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(dir $(MKFILE_PATH))
 
+GIT_CHANGELOG_VERSION := 0.2.1
+
 # add venv bin to PATH
 export PATH := $(MKFILE_DIR)/tmp/bin:$(PATH)
 
@@ -97,8 +99,45 @@ $(TEST_TOX_TARGETS): venv .github/workflows/pull_request.yml
 	$(info ### Starting test with '$(TOX_ENV)' tox env and '$(SCENARIO)' molecule scenario)
 	tox -e $(TOX_ENV) -- molecule test -s $(SCENARIO)
 
-.github/workflows/pull_request.yml: tox.ini Makefile
+.PHONY:
+changelog:
+	printf '%s\n' "##### Update CHANGELOG (version: '$${CHANGELOG_TAG:-}' ) #####"
+	docker run -ti --rm -e CHANGELOG_TAG="$${CHANGELOG_TAG:-}" -v $(MKFILE_DIR):/git rockandska/git-changelog:$(GIT_CHANGELOG_VERSION)
+	if ! git diff --exit-code CHANGELOG.md 2>&1 > /dev/null;then
+		printf '%s\n' "##### Commiting changes #####"
+		git add CHANGELOG.md
+		if [[ -n "$${CHANGELOG_TAG:-}" ]];then
+			git commit -m "Bump version to $${CHANGELOG_TAG} [skip ci]"
+			printf '%s\n' "##### Add tag '$${CHANGELOG_TAG}' #####"
+			git tag -m "$${CHANGELOG_TAG}" "$${CHANGELOG_TAG}"
+		else
+			git commit -m "Changelog update [skip ci]"
+		fi
+	fi
+
+.PHONY: release
+release: CURRENT_GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+release: LAST_VERSION = $(shell git for-each-ref --merged $(CURRENT_GIT_BRANCH) --sort=-creatordate --format '%(refname)' refs/tags | sed 's/refs\/tags\///' | head -n1)
+release: NEXT_VERSION = $(shell docker run --rm -v $(MKFILE_DIR):/tmp --workdir /tmp ghcr.io/caarlos0/svu next --strip-prefix)
+release:
+	printf '%s\n' "##### Release (LAST_VERSION='$${LAST_VERSION:=$(LAST_VERSION)}' / NEXT_VERSION='$${NEXT_VERSION:=$(NEXT_VERSION)}' ) #####"
+	[[ "$${LAST_VERSION}" == "$${NEXT_VERSION}" ]] \
+		&& { NEXT_VERSION=''; printf '%s\n' "Version: ''"; } \
+		|| printf '%s\n' "Version: $${NEXT_VERSION}"
+	CHANGELOG_TAG="$${NEXT_VERSION}" $(MAKE) --no-print-directory changelog
+
+.PHONY: publish
+publish: TOX_ENV := $(lastword $(TEST_TOX_ENV_LIST))
+publish:
+	printf '##### Publishing role to galaxy with "%s" tox env #####\n' "$(TOX_ENV)"
+	tox -q -e "$(TOX_ENV)" -- ansible-galaxy role import rockandska ansible-role-rabbitmq
+
+.github/workflows/pull_request.yml: tox.ini .github/workflows/push_master.yml .FORCE
 	$(info ### Updating GHA pull_request workflow ###)
+	docker run --rm -v "${PWD}":/workdir mikefarah/yq:4.9.6 -i eval '.jobs.Tests.strategy.matrix.target = [ "$(subst $(_SPACE),"$(_SPACE)$(_COMMA)$(_SPACE)",$(strip $(TESTS_TARGETS)))" ]' $@
+
+.github/workflows/push_master.yml: tox.ini .FORCE
+	$(info ### Updating GHA push_master workflow ###)
 	docker run --rm -v "${PWD}":/workdir mikefarah/yq:4.9.6 -i eval '.jobs.Tests.strategy.matrix.target = [ "$(subst $(_SPACE),"$(_SPACE)$(_COMMA)$(_SPACE)",$(strip $(TESTS_TARGETS)))" ]' $@
 
 ##############
