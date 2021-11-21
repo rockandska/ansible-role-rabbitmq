@@ -17,7 +17,7 @@ Compatibility
 | ---------------- | ---------- |
 | 3.6.x            | Deprecated |
 | 3.7.x            | Deprecated |
-| 3.8              |     OK[1]     |
+| 3.8              |     OK     |
 | > 3.8            | Not tested |
 | **Distribution** |            |
 | CentOS 7         | OK         |
@@ -26,8 +26,6 @@ Compatibility
 | Debian > 9       | Not tested |
 | Ubuntu bionic    | OK         |
 | Ubuntu > bionic  | Not tested |
-
-1. rabbitmq_peer_discovery_classic mode KO, cluster nodes should be added manually
 
 Requirements on remote hosts
 ------------
