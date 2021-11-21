@@ -1,0 +1,8 @@
+local repo_url='https://github.com/rockandska/ansible-role-rabbitmq'
+local commit_url="${repo_url}/commit/${hash}"
+local release_url="${repo_url}/tree/${tag}"
+local unreleased_url="${repo_url}/tree/master"
+local date=$(date +'%Y-%m-%d')
+release_tpl=('[%s](%s) (%s)\n\n' "${tag}" "${release_url}" "${date}")
+unreleased_tpl=('[%s](%s) (%s)\n\n' 'Unreleased' "${unreleased_url}" "${date}")
+commit_tpl=('- %s ([%.7s](%s))\n' "${title:-}" "${hash}" "${commit_url}")
