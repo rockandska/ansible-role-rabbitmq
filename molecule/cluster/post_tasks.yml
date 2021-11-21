@@ -1,0 +1,25 @@
+---
+- name: Get cluster status
+  command: rabbitmqctl cluster_status --formatter json
+  changed_when: false
+  register: __rabbitmq_cluster_status
+
+- name: Register cluster_status
+  set_fact:
+    __rabbitmq_cluster_status: "{{ __rabbitmq_cluster_status.stdout | from_json }}"
+
+- name: Test that all nodes are in the cluster
+  assert:
+    that: "'rabbit@{{ item }}' in __rabbitmq_cluster_status['running_nodes']"
+  with_items:
+    - "{{ groups['rabbitmq-master'] }}"
+    - "{{ groups['rabbitmq-slave'] }}"
+
+- name: Check internode connection
+  command: rabbitmqctl eval 'init:get_argument(proto_dist).' 2> /dev/null
+  changed_when: false
+  register: __rabbitmq_cluster_ssl_status
+
+- name: Test that internode connection is SSL
+  assert:
+    that: "__rabbitmq_cluster_ssl_status.stdout == '{ok,[[\"inet_tls\"]]}'"

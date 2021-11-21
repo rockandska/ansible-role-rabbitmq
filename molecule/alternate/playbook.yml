@@ -27,6 +27,8 @@
             {default_user_tags, [administrator]}
           ]
         }
+    rabbitmq_env_config:
+      NODENAME: test@localhost
     rabbitmq_systemd_override:
       Service:
         LimitNOFILE: 50000
@@ -44,6 +46,7 @@
         read_priv: .*
         write_priv: .*
         tags: administrator
+    rabbitmq_node_name: test@localhost
     rabbitmq_management_user: admin
     rabbitmq_management_password: admin
     rabbitmq_plugins_to_enable:

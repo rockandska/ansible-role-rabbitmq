@@ -1,4 +1,9 @@
 ---
-- src: rockandska.erlang
-  name: ansible-role-erlang
-  version: 0.1.1
+roles:
+  - src: rockandska.erlang
+    name: ansible-role-erlang
+    version: 0.1.1
+
+  - src: andrewrothstein.mkcert
+    name: ansible-role-mkcert
+    version: v1.0.0

@@ -47,6 +47,14 @@
     - rabbitmq_policies_to_create
     - rabbitmq_policies_to_delete
     - rabbitmq_hide_log
+    - rabbitmq_env_tpl
+    - rabbitmq_env_config
+    - rabbitmq_management_protocol
+    - rabbitmq_internode_ssl_config
+    - rabbitmq_users_groups
+    - rabbitmq_management_ca_cert
+    - rabbitmq_management_client_cert
+    - rabbitmq_management_client_key
 
 - name: "[RabbitMQ] Test that variables are not empty"
   assert:

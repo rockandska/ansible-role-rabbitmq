@@ -1,0 +1,21 @@
+# {{ ansible_managed }}
+
+{% if _erl_ssl_path is not skipped %}
+# NOTE: the following path is system dependent and will change between Erlang
+#       versions
+{{ _erl_ssl_path.stdout }}
+
+# -pa $ERL_SSL_PATH prepends the directory ERL_SSL_PATH points at to the code path
+# -proto_dist inet_tls tells the runtime to encrypt inter-node communication
+# -ssl_dist_optfile tells the runtime where to find its inter-node TLS configuration file
+SERVER_ADDITIONAL_ERL_ARGS="-pa $ERL_SSL_PATH
+  -proto_dist inet_tls
+  -ssl_dist_optfile /etc/rabbitmq/inter_node_tls.config"
+
+RABBITMQ_CTL_ERL_ARGS="-pa $ERL_SSL_PATH
+  -proto_dist inet_tls
+  -ssl_dist_optfile /etc/rabbitmq/inter_node_tls.config"
+{% endif %}
+{% for key,value in rabbitmq_env_config.items() %}
+{{ key }}="{{ value }}"
+{% endfor %}

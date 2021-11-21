@@ -1,14 +1,14 @@
 ansible-role-rabbitmq
 =========
 
-Ansible role to install RabbitMQ from RabbitMQ repository.  
+Ansible role to install RabbitMQ from RabbitMQ repository.
 Available on [Ansible Galaxy](https://galaxy.ansible.com/rockandska/rabbitmq)
 
-**Ansible Galaxy :**    
-![Galaxy Score](https://img.shields.io/ansible/quality/38029.svg)  
+**Ansible Galaxy :**
+![Galaxy Score](https://img.shields.io/ansible/quality/38029.svg)
 
-**Travis Build :**  
-[![Build Status](https://travis-ci.com/rockandska/ansible-role-rabbitmq.png?branch=master)](https://travis-ci.com/rockandska/ansible-role-rabbitmq) 
+**Travis Build :**
+[![Build Status](https://travis-ci.com/rockandska/ansible-role-rabbitmq.png?branch=master)](https://travis-ci.com/rockandska/ansible-role-rabbitmq)
 
 Compatibility
 ------------
@@ -84,11 +84,18 @@ rabbitmq_sysctl_config: {}
 rabbitmq_erlang_tpl: etc/rabbitmq/erlang.config.j2
 rabbitmq_erlang_config:
 
+rabbitmq_env_tpl: etc/rabbitmq/rabbitmq-env.conf.j2
+rabbitmq_env_config: {}
+
+rabbitmq_node_name:
+
 rabbitmq_systemd_override_tpl: etc/systemd/system/rabbitmq-server.service.d/override.conf.j2
 rabbitmq_systemd_override: {}
 
 rabbitmq_custom_logrotate_tpl: etc/logrotate.d/rabbitmq-server.j2
 rabbitmq_custom_logrotate:
+
+rabbitmq_users_groups: []
 
 ###########
 # Cluster #
@@ -97,6 +104,7 @@ rabbitmq_is_master:
 rabbitmq_slave_of:
 rabbitmq_peer_discovery_classic: true
 rabbitmq_cluster_node_type: disc
+rabbitmq_internode_ssl_config:
 
 ###########
 # Plugins #
@@ -117,6 +125,10 @@ rabbitmq_management_user:
 rabbitmq_management_password:
 rabbitmq_management_host:
 rabbitmq_management_port:
+rabbitmq_management_protocol:
+rabbitmq_management_ca_cert:
+rabbitmq_management_client_cert:
+rabbitmq_management_client_key:
 
 ##########
 # Vhosts #
@@ -302,6 +314,34 @@ rabbitmq_hide_log: true
     }
   ```
 
+- `rabbitmq_env_tpl`
+  - path to the rabbitmq env config template
+  - if you want to use your own template
+    - add your template next to your playbook in a `templates` directory
+    - use a different path than the default one
+  - some env vars are set automatically if SSL internodes is activated
+    - ERL_SSL_PATH
+    - SERVER_ADDITIONAL_ERL_ARGS
+    - RABBITMQ_CTL_ERL_ARGS
+
+- `rabbitmq_env_config`:
+  - a dict representing the env config
+  - the key should be the name of the environment variable
+  - the value should be the content of the var
+  - example:
+    ```yaml
+    rabbitmq_env_config:
+      NODENAME: "bunny@myhost"
+    ```
+
+- `rabbitmq_node_name`:
+  - a string representing the node name to use
+  - use it if you change nodename through rabbitmq_env_config
+  - example:
+    ```yaml
+    rabbitmq_node_name: "bunny@myhost"
+    ```
+
 - `rabbitmq_systemd_override_tpl`
   - path to the rabbitmq systemd override template
   - if you want to use your own template
@@ -311,7 +351,7 @@ rabbitmq_hide_log: true
 - `rabbitmq_systemd_override`
   - a dict representing the systemd override config
   - the first level is used for the ini section
-  - the second level is used for the key / value 
+  - the second level is used for the key / value
   - example:
     ```yaml
     rabbitmq_systemd_override:
@@ -353,6 +393,21 @@ rabbitmq_hide_log: true
     # }
     ```
 
+- `rabbitmq_users_groups`
+
+  - a list of users and user module arguments (name, groups,append)
+
+  - Used to set/add user to groups after RabbitMQ installation
+
+  - example:
+
+    ```yaml
+    rabbitmq_users_groups:
+      - name: rabbitmq
+        groups: ssl-cert
+        append: true
+    ```
+  
 - `rabbitmq_is_master`
 
   - true / false
@@ -389,11 +444,34 @@ rabbitmq_hide_log: true
 
   - default: true
   - the cluster configuration will be automatically generated and added to the configuration file based on inventory names (depends on `rabbitmq_is_master` , `rabbitmq_slave_of` role variable.)
-  
+
 - `rabbitmq_cluster_node_type`
 
   - default: disc
   - whether the node is of type `disc` or `ram`
+
+- `rabbitmq_internode_ssl_config`
+  - used to write dedicated internode configuration (see [RabbitMQ Documentation](https://www.rabbitmq.com/clustering-ssl.html#linux-strategy-two))
+  - if set, the part who need to be added to `/etc/rabbitmq/rabbitmq-env.conf`
+      will be done automatically.
+  - Example:
+    ```yaml
+    rabbitmq_internode_ssl_config: |
+      [
+        {server, [
+          {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
+          {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
+          {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
+          {secure_renegotiate, true}
+        ]},
+        {client, [
+          {cacertfile, "/etc/ssl/private/Custom_Bundle-CA.pem"},
+          {certfile,   "/usr/local/share/ca-certificates/{{ ansible_hostname }}.crt"},
+          {keyfile,    "/etc/ssl/private/{{ ansible_hostname }}.key"},
+          {secure_renegotiate, true}
+        ]}
+      ].
+    ```
 
 - `rabbitmq_users_to_create`
 
@@ -459,6 +537,44 @@ rabbitmq_hide_log: true
 - `rabbitmq_management_port`
 
   - default: 15672
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_protocol`
+
+  - default: http
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_ca_cert`
+
+  - CA certificate to verify SSL connection to management API
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_client_cert`
+  - Client certificate to send on SSL connections to management API.
+  - Used if one or more of those configurations are set:
+    - `rabbitmq_exchanges_to_create`
+    - `rabbitmq_exchanges_to_delete`
+    - `rabbitmq_bindings_to_create`
+    - `rabbitmq_bindings_to_delete`
+  - **Don't forget to configure rabbitmq_management to only allow connection from localhost if needed**
+
+- `rabbitmq_management_client_key`
+  - Private key matching the client certificate.
   - Used if one or more of those configurations are set:
     - `rabbitmq_exchanges_to_create`
     - `rabbitmq_exchanges_to_delete`
@@ -606,11 +722,11 @@ rabbitmq_hide_log: true
 
     ```yaml
      rabbitmq_policies_to_create:
-       - name: HA                                                       
+       - name: HA
          vhost: vhost_test
          pattern: .*
          tags:
-           ha-mode: all                                                           
+           ha-mode: all
     ```
 
 - `rabbitmq_policies_to_delete`

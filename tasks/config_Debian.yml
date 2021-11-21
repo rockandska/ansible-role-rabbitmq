@@ -35,3 +35,4 @@
     package:
       - rabbitmq-server
     state: present
+    install_recommends: false

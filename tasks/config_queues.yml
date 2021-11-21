@@ -11,12 +11,16 @@
     login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
     login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
     login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    login_protocol: "{{ rabbitmq_management_protocol | default(omit,true) }}"
     max_length: "{{ item.max_length | default(omit) }}"
     max_priority: "{{ item.max_priority | default(omit) }}"
     message_ttl: "{{ item.message_ttl | default(omit) }}"
     name: "{{ item.name | default(omit) }}"
     vhost: "{{ item.vhost | default(omit) }}"
     state: present
+    ca_cert: "{{ rabbitmq_management_ca_cert | default(omit,true) }}"
+    client_cert: "{{ rabbitmq_management_client_cert | default(omit,true) }}"
+    client_key: "{{ rabbitmq_management_client_key | default(omit,true) }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_queues_to_create }}"
@@ -30,9 +34,13 @@
     login_port: "{{ rabbitmq_management_port | default(omit,true) }}"
     login_user: "{{ rabbitmq_management_user | default(omit,true) }}"
     login_password: "{{ rabbitmq_management_password | default(omit,true) }}"
+    login_protocol: "{{ rabbitmq_management_protocol | default(omit,true) }}"
     name: "{{ item.name | default(omit) }}"
     vhost: "{{ item.vhost | default(omit) }}"
     state: absent
+    ca_cert: "{{ rabbitmq_management_ca_cert | default(omit,true) }}"
+    client_cert: "{{ rabbitmq_management_client_cert | default(omit,true) }}"
+    client_key: "{{ rabbitmq_management_client_key | default(omit,true) }}"
   no_log: "{{ rabbitmq_hide_log }}"
   with_items:
     - "{{ rabbitmq_queues_to_delete }}"

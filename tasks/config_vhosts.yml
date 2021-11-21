@@ -4,6 +4,7 @@
     name: "{{ item.name }}"
     tracing: "{{ item.tracing | default(omit) }}"
     state: present
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
   with_items:
     - "{{ rabbitmq_vhosts_to_create }}"
   when:
@@ -14,6 +15,7 @@
   rabbitmq_vhost:
     name: "{{ item }}"
     state: absent
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
   with_items:
     - "{{ rabbitmq_vhosts_to_delete }}"
   when:

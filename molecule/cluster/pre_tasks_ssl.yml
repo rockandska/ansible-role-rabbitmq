@@ -1,0 +1,89 @@
+---
+- name: Install Openssl
+  package:
+    name: openssl
+
+- import_role:
+    name: ansible-role-mkcert
+
+- name: mkcert --install
+  command: /usr/local/bin/mkcert --install
+  changed_when: false
+  when:
+    - rabbitmq_is_master | d(false)
+
+- name: Get mkcert CAROOT
+  command: /usr/local/bin/mkcert -CAROOT
+  changed_when: false
+  register: _mkcert_caroot
+
+- name: Synchronize mkcert CA
+  block:
+    - name: Create temporary directory
+      tempfile:
+        state: directory
+      register: _tmp
+      delegate_to: localhost
+      delegate_facts: true
+      changed_when: false
+      become: false
+      run_once: true
+
+    - name: Fetch mkcert CAROOT from master
+      run_once: true
+      fetch:
+        src: "{{ _mkcert_caroot.stdout }}/{{ item }}"
+        dest: "{{ _tmp.path }}/"
+        flat: true
+      changed_when: false
+      with_items:
+        - rootCA.pem
+        - rootCA-key.pem
+      when:
+        - rabbitmq_is_master | d(false)
+
+    - name: Copy mkcert CAROOT to slaves
+      copy:
+        src: "{{ _tmp.path }}/{{ item }}"
+        dest: "{{ _mkcert_caroot.stdout }}/"
+      with_items:
+        - rootCA.pem
+        - rootCA-key.pem
+      when:
+        - rabbitmq_slave_of | d("") | length > 0
+
+    - name: mkcert --install on slaves
+      command: /usr/local/bin/mkcert --install
+      changed_when: false
+      when:
+        - rabbitmq_slave_of | d("") | length > 0
+
+    - name: Generating server certificates
+      command: "/usr/local/bin/mkcert -key-file /etc/ssl/server.key -cert-file /etc/ssl/server.pem {{ ansible_hostname }} localhost 127.0.0.1 {{ ansible_default_ipv4.address }}"
+      changed_when: false
+
+    - name: Generating client certificates
+      command: "/usr/local/bin/mkcert --client -key-file /etc/ssl/client.key -cert-file /etc/ssl/client.pem {{ ansible_hostname }} localhost 127.0.0.1 {{ ansible_default_ipv4.address }}"
+      changed_when: false
+
+    - name: chmod 640 for certificates
+      file:
+        path: "{{ item }}"
+        owner: nobody
+        group: users
+        mode: '0640'
+      with_items:
+        - /etc/ssl/server.key
+        - /etc/ssl/server.pem
+        - /etc/ssl/client.key
+        - /etc/ssl/client.pem
+
+  always:
+    - name: Remove temporary directory
+      file:
+        path: "{{ _tmp.path }}"
+        state: absent
+      delegate_to: localhost
+      delegate_facts: true
+      changed_when: false
+      become: false

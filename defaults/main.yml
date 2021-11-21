@@ -28,11 +28,18 @@ rabbitmq_sysctl_config: {}
 rabbitmq_erlang_tpl: etc/rabbitmq/erlang.config.j2
 rabbitmq_erlang_config:
 
+rabbitmq_env_tpl: etc/rabbitmq/rabbitmq-env.conf.j2
+rabbitmq_env_config: {}
+
+rabbitmq_node_name:
+
 rabbitmq_systemd_override_tpl: etc/systemd/system/rabbitmq-server.service.d/override.conf.j2
 rabbitmq_systemd_override: {}
 
 rabbitmq_custom_logrotate_tpl: etc/logrotate.d/rabbitmq-server.j2
 rabbitmq_custom_logrotate:
+
+rabbitmq_users_groups: []
 
 ###########
 # Cluster #
@@ -41,6 +48,8 @@ rabbitmq_is_master:
 rabbitmq_slave_of:
 rabbitmq_peer_discovery_classic: true
 rabbitmq_cluster_node_type: disc
+
+rabbitmq_internode_ssl_config:
 
 ###########
 # Plugins #
@@ -61,6 +70,10 @@ rabbitmq_management_user:
 rabbitmq_management_password:
 rabbitmq_management_host:
 rabbitmq_management_port:
+rabbitmq_management_protocol:
+rabbitmq_management_ca_cert:
+rabbitmq_management_client_cert:
+rabbitmq_management_client_key:
 
 ##########
 # Vhosts #
