@@ -1,0 +1,97 @@
+---
+rabbitmq_sysctl_config:
+  listeners:
+    tcp:
+      default: 5672
+rabbitmq_erlang_config: |
+    {rabbit,
+      [
+        {default_vhost,       <<"to_delete">>},
+        {default_user,        <<"guest_delete">>},
+        {default_pass,        <<"guest_delete">>},
+        {default_permissions, [<<".*">>, <<".*">>, <<".*">>]},
+        {default_user_tags, [administrator]}
+      ]
+    }
+rabbitmq_systemd_override:
+  Service:
+    LimitNOFILE: 50000
+rabbitmq_custom_logrotate: |
+  weekly
+  missingok
+  rotate 40
+  compress
+  notifempty
+rabbitmq_users_to_create:
+  - user: admin
+    password: admin
+    vhost: vhost_test
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    tags: administrator
+rabbitmq_management_user: admin
+rabbitmq_management_password: admin
+rabbitmq_plugins_to_enable:
+  - rabbitmq_management
+rabbitmq_plugins_to_disable:
+  - rabbitmq_shovel
+rabbitmq_vhosts_to_delete:
+  - to_delete
+rabbitmq_vhosts_to_create:
+  - name: vhost_test
+rabbitmq_users_to_delete:
+  - guest_delete
+rabbitmq_queues_to_create:
+  - name: queue_test
+    vhost: vhost_test
+rabbitmq_queues_to_delete:
+  - name: queue_not_exist
+    vhost: vhost_not_exist
+rabbitmq_exchanges_to_create:
+  - name: exchange_test
+    vhost: vhost_test
+rabbitmq_exchanges_to_delete:
+  - name: exchange_not_exist
+    vhost: vhost_not_exist
+rabbitmq_bindings_to_create:
+  - name: exchange_test
+    destination: queue_test
+    destination_type: queue
+    vhost: vhost_test
+rabbitmq_bindings_to_delete:
+  - name: exchange_not_exist
+    destination: queue_test
+    destination_type: queue
+    vhost: vhost_test
+rabbitmq_policies_to_create:
+  - name: HA
+    vhost: vhost_test
+    pattern: .*
+    tags:
+      ha-mode: all
+rabbitmq_policies_to_delete:
+  - name: HA_not_exist
+    vhost: vhost_test
+rabbitmq_hide_log: false
+rabbitmq_users_groups:
+  - name: rabbitmq
+    groups: users
+    append: true
+rabbitmq_internode_ssl_config: |
+  [
+    {server, [
+      {cacertfile,   "{{ (ansible_distribution == 'CentOS') | ternary('/etc/pki/tls/certs/ca-bundle.crt','/etc/ssl/certs/ca-certificates.crt') }}" },
+      {certfile,   "/etc/ssl/server.pem"},
+      {keyfile,    "/etc/ssl/server.key"},
+      {secure_renegotiate, true},
+      {verify, verify_peer},
+      {fail_if_no_peer_cert, true}
+    ]},
+    {client, [
+      {cacertfile,   "{{ (ansible_distribution == 'CentOS') | ternary('/etc/pki/tls/certs/ca-bundle.crt','/etc/ssl/certs/ca-certificates.crt') }}" },
+      {certfile,   "/etc/ssl/client.pem"},
+      {keyfile,    "/etc/ssl/client.key"},
+      {secure_renegotiate, true}
+    ]}
+  ].

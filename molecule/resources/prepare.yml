@@ -1,6 +1,6 @@
 ---
 - name: Prepare
-  hosts: all
+  hosts: rabbitmq
   gather_facts: true
   become: true
   tasks:

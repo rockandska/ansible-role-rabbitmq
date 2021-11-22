@@ -10,7 +10,7 @@ lint: |
   yamllint .
   ansible-lint
 platforms:
-  - name: ansible-role-rabbitmq-ubuntu-bionic
+  - name: ansible-role-rabbitmq-ubuntu-bionic-alternate
     image: ubuntu:bionic
     command: "/lib/systemd/systemd"
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
@@ -21,7 +21,9 @@ platforms:
       - /run
     capabilities:
       - SYS_ADMIN
-  - name: ansible-role-rabbitmq-debian-stretch
+    groups:
+      - rabbitmq
+  - name: ansible-role-rabbitmq-debian-stretch-alternate
     image: debian:stretch
     command: "/lib/systemd/systemd"
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
@@ -32,7 +34,9 @@ platforms:
       - /run
     capabilities:
       - SYS_ADMIN
-  - name: ansible-role-rabbitmq-centos-7
+    groups:
+      - rabbitmq
+  - name: ansible-role-rabbitmq-centos-7-alternate
     image: centos:7
     command: "/usr/sbin/init"
     docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
@@ -43,6 +47,8 @@ platforms:
       - /run
     capabilities:
       - SYS_ADMIN
+    groups:
+      - rabbitmq
 provisioner:
   name: ansible
   playbooks:

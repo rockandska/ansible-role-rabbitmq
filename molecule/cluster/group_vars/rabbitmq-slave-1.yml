@@ -1,0 +1,2 @@
+---
+rabbitmq_slave_of: ansible-role-rabbitmq-ubuntu-bionic-1-cluster
