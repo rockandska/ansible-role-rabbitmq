@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.2.1](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.2.1) (2021-11-22)
+
+### fix
+
+- don't gather facts for hosts not in the play ([7b249f9](https://github.com/rockandska/ansible-role-rabbitmq/commit/7b249f9b9ab617c69c59aab37dfe56ab1614f33b))
+
 ## [0.2.0](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.2.0) (2021-11-21)
 
 ### feat
