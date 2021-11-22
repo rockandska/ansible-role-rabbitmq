@@ -1,0 +1,10 @@
+---
+- name: "Check that we gathered facts from 3 hosts"
+  delegate_to: localhost
+  assert:
+    that:
+      - (nb_facts | int) == 3
+    msg: "Expected to have 3 ansible_hostname defined in hostvars but found {{ nb_facts }}"
+  run_once: true
+  vars:
+    nb_facts: "{{ groups['all'] | map('extract', hostvars,'ansible_hostname') | select('defined') | list | length }}"

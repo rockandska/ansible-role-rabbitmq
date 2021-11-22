@@ -5,6 +5,9 @@
   any_errors_fatal: true
   tasks:
     - import_tasks: pre_tasks.yml
+      vars:
+        nb_master2check: 2
+        nb_slave2check: 3
     - import_tasks: pre_tasks_ssl.yml
 
 - hosts: rabbitmq-master
@@ -36,4 +39,5 @@
   become: true
   any_errors_fatal: true
   tasks:
+    - import_tasks: post_tasks_cluster.yml
     - import_tasks: post_tasks.yml

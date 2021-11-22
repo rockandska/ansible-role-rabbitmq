@@ -12,3 +12,31 @@
   failed_when:
     - lookup('env','ERLANG_SERIES') is not defined
       or (lookup('env','ERLANG_SERIES') | string | length == 0)
+
+- name: "Check that we have {{ nb_master2check }} distinct masters / {{ nb_slave2check }} distinct slaves configured"
+  delegate_to: localhost
+  assert:
+    that:
+      - (nb_master | int) == nb_master2check
+      - (nb_slave | int) == nb_slave2check
+    msg: "Expected to have {{ nb_master2check }} masters / {{ nb_slave2check }} slaves but got {{ nb_master }} masters / {{ nb_slave }} slaves"
+  run_once: true
+  vars:
+    nb_master: "{{
+      groups['all']
+      | map('extract',hostvars)
+      | selectattr('rabbitmq_is_master','defined')
+      | map(attribute='inventory_hostname')
+      | list
+      | unique
+      | length
+      }}"
+    nb_slave: "{{
+      groups['all']
+      | map('extract',hostvars)
+      | selectattr('rabbitmq_slave_of','defined')
+      | map(attribute='inventory_hostname')
+      | list
+      | unique
+      | length
+      }}"
