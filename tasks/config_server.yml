@@ -3,29 +3,29 @@
   setup:
   delegate_to: "{{ item }}"
   delegate_facts: true
-  with_items: "{{
-                (
-                  groups['all']
-                    | map('extract',hostvars)
-                    | selectattr('rabbitmq_slave_of','defined')
-                    | map(attribute='inventory_hostname')
-                    | list
-                )
-                +
-                (
-                  groups['all']
-                    | map('extract',hostvars)
-                    | selectattr('rabbitmq_is_master','defined')
-                    | map(attribute='inventory_hostname')
-                    | list
-                )
-              }}"
+  with_items:
+    "{{
+      (
+        (
+          groups['all']
+            | map('extract',hostvars)
+            | selectattr('rabbitmq_slave_of','defined')
+            | selectattr('rabbitmq_slave_of','equalto',(rabbitmq_slave_of | d(inventory_hostname, true)))
+            | map(attribute='inventory_hostname')
+            | list
+        )
+        +
+        [ rabbitmq_slave_of | ternary(rabbitmq_slave_of,inventory_hostname) ]
+      ) | unique
+    }}"
   run_once: true
   when:
     - hostvars[item]['ansible_hostname'] is not defined
     - rabbitmq_is_master
-      or rabbitmq_slave_of != none
-      or rabbitmq_slave_of | d("") | length > 0
+      or (
+        rabbitmq_slave_of != none
+        and rabbitmq_slave_of | d("") | length > 0
+      )
 
 - name: "[RabbitMQ] Define cluster nodes"
   delegate_to: localhost
