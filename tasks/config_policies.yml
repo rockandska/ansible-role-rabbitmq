@@ -19,6 +19,7 @@
   rabbitmq_policy:
     name: "{{ item.name | default(omit) }}"
     vhost: "{{ item.vhost | default(omit) }}"
+    node: "{{ rabbitmq_node_name | default(omit,true) }}"
     state: absent
   with_items:
     - "{{ rabbitmq_policies_to_delete }}"
