@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [0.3.0](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.3.0) (2021-11-23)
+
+### feat
+
+- add support for setting/deleting global parameters ([3add67f](https://github.com/rockandska/ansible-role-rabbitmq/commit/3add67f38a693ee5b807dbfefcf2896f43b69ab2))
+- Add parameter support ([c776b94](https://github.com/rockandska/ansible-role-rabbitmq/commit/c776b94a66e2522f855bf458b5d5cd2b6f930f03))
+- re-enable policies ([763628d](https://github.com/rockandska/ansible-role-rabbitmq/commit/763628db3321e4c64cd873d43f873f79d607793a))
+
+### fix
+
+- missing node parameter with delete policies ([1cd47f4](https://github.com/rockandska/ansible-role-rabbitmq/commit/1cd47f4f467548768818ad7e386ca219ecf7f0aa))
+
 ## [0.2.1](https://github.com/rockandska/ansible-role-rabbitmq/tree/0.2.1) (2021-11-22)
 
 ### fix
